@@ -1,0 +1,154 @@
+body{
+    background-color: white;
+    text-align: center;
+}
+
+
+
+                                                    /* navbar design */
+.brand-img{
+    width: 80px;
+    
+}
+.brand-logo{
+    font-family: 'Condiment', cursive;
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+nav{
+    padding: 0 2%;
+   
+}
+
+.nav-link{
+ margin-left: 20px;
+ font-size: 1.2rem;
+ font-family: 'Merriweather', serif;
+}
+
+.login-btn{
+    margin-left: 20px;
+}
+
+/* top-section */
+.top-section{
+    background-color: #D076F7;
+    padding: 100px 0;
+}
+
+.welcome-title{
+    color: white;
+    font-family:  'Merriweather', serif;
+    font-weight: 700;
+    line-height: 1.5;
+}
+.students-img{
+    height: 60vh;
+    width: 100%;
+    object-fit: cover;
+}
+
+.description-txt{
+    width: 70%;
+    font-family: 'Roboto', sans-serif;
+    display: inline-block;
+    line-height: 2.0;
+    text-align: justify;
+    margin-top: 0 auto;
+    font-size: 1.5rem;
+}
+
+
+
+                                                     /* middle container */
+.big-heading{
+    font-family: 'Merriweather', serif;
+    font-weight: bold;
+}
+hr {
+    border: 15px dotted gray;
+    border-style: none none dotted; 
+    color: #fff; 
+    background-color: #fff;
+    width: 15%;
+    
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+.course-grid{
+    text-align: center;
+}
+.course-card{
+    max-width: 300px;
+    border-radius: 10px;
+    text-align: left;
+    margin: 10px auto;
+    padding: 10px 20px;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    
+}
+.course-card:hover{
+    background-color: #D076F7;
+    color: white;
+}
+                                                     
+.middle-container{
+    padding: 100px 0;
+    background-color: white;
+    margin: 0 auto;
+}
+
+.card{
+    width: 18rem;
+    margin: 20px auto;
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    
+   
+}
+
+.categories-icon{
+    width: 150px;
+    margin: 0 auto;
+}
+.row{
+    padding-top: 80px;
+}
+.mini-description{
+    text-align: left;
+}
+
+.btn-primary{
+    background-color: darkcyan;
+    border-color: darkcyan;
+    
+    width: 200px;
+}
+
+/* .btn-primary:hover{
+    background-color: #3D2C8D;
+    border-color: #3D2C8D;
+} */
+@media (max-width: 1000px) {
+    .btn-primary{
+        width: 35vh;
+    }
+}
+
+
+
+
+
+
+
+
+
+.bottom-icon{
+  padding: 20px 10px;
+}
+
+footer{
+    padding: 100px 0;
+    background-color: #D076F7;
+    color: white;
+}
