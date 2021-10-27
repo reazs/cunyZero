@@ -1,11 +1,12 @@
 from cunyzero import app
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm
 from flask import render_template, redirect, url_for
-
+from cunyzero.schedule import classes
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+
+    return render_template("home.html", courses=classes)
 
 
 
