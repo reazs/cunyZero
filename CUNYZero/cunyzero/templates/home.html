@@ -1,0 +1,118 @@
+
+{% include "header.html" %} 
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css')}}">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Condiment&display=swap" rel="stylesheet">
+
+<header class="masthead" style="background-image: url('static/images/image1.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>City College Of New York</h1>
+            <span class="subheading">The Best Learning Institution!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+   <section>
+
+        <div class="middle-container">
+             <div class="description-txt">
+                The City College of New York is the founding institution of the City University of
+                 New York and home to eight schools and divisions, each dedicated to the advancement of research and knowledge.
+                  We're the place where Albert Einstein first presented his theory of general relativity outside of Europe,
+                    We’re the City College of yesterday, today and tomorrow. See yourself here. City College.
+            </div>
+
+                <br><br><br><br>
+                
+                    <a href="" class="btn btn-primary btn-lg btn-block">Apply Now</a>
+                
+            
+                    <section class="course-container">
+                        
+                        <div class="row course-grid">
+                            <div class="col-lg-12">
+                                <h2 class="big-heading">Course</h1>
+                                    <hr>
+                            </div>
+        
+                    
+                        {% for course in courses: %}
+
+                            <div class="col-lg-2 course-card col-md-5">
+                                <h3 class="medium-heading">
+                                  {{ course["class_name"] }}
+                                </h3>
+                                <h6>instructor: {{course["instructor"]}}</h6>
+                                <h6>seats: {{course["seat"]}}</h6>
+                                <div>
+                                    <span>Mon-Wed: {{course["time"] }}</span>
+                                </div>
+                                <span>status: {{course['status']}}</span>
+                            </div>
+<!--                             
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-2"></div> -->
+                        {% endfor %}
+
+                        </div>
+                
+                    </section>
+
+
+            <div class="row">
+                <div class="col-lg-3 card">
+                <img class="categories-icon" src="static/images/icons/student-icon.png" alt="">
+                <div class="card-body">
+                    <p class="mini-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                </div>
+                <div class="col-lg-3 card">
+                    <img class="categories-icon" src="static/images/icons/book-icon.png" alt="">
+                    <div class="card-body">
+                        <p class='mini-description'> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>    
+                    </div>
+                </div>
+                <div class="col-lg-3 card">
+                    <img class="categories-icon" src="static/images/icons/document-icon.png" alt="">
+                    <div class="card-body">
+                        <p class='mini-description'>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-3 card">
+                    <img class="categories-icon" src="static/images/icons/admission-icon.png" alt="">
+                    <div class="card-body">
+                        <p class='mini-description'>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+                        </p>
+                    </div>
+                </div>
+                
+                
+                
+            </div>
+
+
+        </div>
+    </section>
+  
