@@ -43,34 +43,36 @@
             <a class="nav-link" href="{{ url_for('home') }}">Home</a>
           </li>
         
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id='thisIsForLoginDropdown' role="button" data-bs-toggle="dropdown" aria-expanded="false">Login</a>
-            
-            <ul class="dropdown-menu" ria-labelledby='thisIsForLoginDropdown'>
-              <li>
-                <a class="dropdown-item" href="{{ url_for('student_login') }}">Student</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ url_for('instructor_login') }}">Instructor</a>
-              </li>
-            </ul>
-
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Register
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-              <li><a class="dropdown-item" href="{{url_for('student_register')}}">Student</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('staff_register') }}">Instructor</a></li>
+          {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
+            </li>
+          {% else %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id='thisIsForLoginDropdown' role="button" data-bs-toggle="dropdown" aria-expanded="false">Login</a>
               
-            </ul>
-          </li>
+              <ul class="dropdown-menu" ria-labelledby='thisIsForLoginDropdown'>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('student_login') }}">Student</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('instructor_login') }}">Instructor</a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Register
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item" href="{{url_for('student_register')}}">Student</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('staff_register') }}">Instructor</a></li>
+                
+              </ul>
+            </li>
+          {% endif %}
       
-          <li class="nav-item">
-            <a class="nav-link" href="">Log Out</a>
-          </li>
-    
           <li class="nav-item">
             <a class="nav-link" href="">About</a>
           </li>
