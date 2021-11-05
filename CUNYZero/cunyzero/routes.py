@@ -13,7 +13,7 @@ def home():
 
 @app.route("/register_state", methods=["POST", "GET"])
 def register_state():
-    return render_template("register_state.html")
+    return render_template("login_signup/register_state.html")
 
 
 @app.route("/student_register", methods=["POST","GET"])
@@ -26,7 +26,7 @@ def student_register():
         db.session.commit()
         flash('Your account has been created! Wait for the confirmation email!', 'success')
         return redirect(url_for('student_login'))
-    return render_template("student_register.html", form=form)
+    return render_template("login_signup/student_register.html", form=form)
 
 
 
@@ -42,8 +42,7 @@ def staff_register():
         db.session.commit()
         flash('Your account has been created! Wait for the confirmation email!', 'success')
         return redirect(url_for('instructor_login'))
-    return render_template("staff_register.html", form=form)
-
+    return render_template("login_signup/staff_register.html", form=form)
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -53,10 +52,10 @@ def student_login():
         student = Student.query.filter_by(email=form.email.data).first()
         if student and bcrypt.check_password_hash(student.password, form.password.data):
             login_user(student, remember=form.remember.data)
-            return redirect(url_for('home'))
+            return redirect(url_for('student_center'))
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
-    return render_template("student_login.html", form=form)
+    return render_template("login_signup/student_login.html", form=form)
 
 
 @app.route("/instructor_login", methods=["POST", "GET"])
@@ -71,10 +70,15 @@ def instructor_login():
             return redirect(url_for('home'))
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
-    return render_template("instructor_login.html", form=form)
+    return render_template("login_signup/instructor_login.html", form=form)
 
 
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+@app.route("/student_center")
+def student_center():
+    return render_template("student/student_center.html")

@@ -1,9 +1,9 @@
 {%import "bootstrap/wtf.html" as wtf %}
-{% include "header.html" %} 
+{% include "login_signup/header.html" %}
 
  <!-- Page Header -->
  <link rel="stylesheet" href="static/register_login.css">
-<header class="masthead" style="background-image: url('https://images.hdqwalls.com/download/tranquility-minimal-4k-6q-2560x1440.jpg')">
+<header class="masthead" style="background-image: url('https://images.unsplash.com/photo-1484100356142-db6ab6244067?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -89,9 +89,11 @@
       
         <div class="border-top pt-3">
           <small class="text-muted">
-            Need an Account? <a class="ml-2" href="{{ url_for('staff_register')}}">Register</a>
+            Need an Account? <a class="ml-2" href="{{ url_for('student_register')}}">Register</a>
           </small>
         </div>
     </div>
     </div>
   </div>
+
+  {% include "footer.html" %}

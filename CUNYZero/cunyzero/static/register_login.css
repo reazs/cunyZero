@@ -2,3 +2,8 @@
 
     height: 200px;
 }
+
+.navbar-brand{
+    color: red;
+    font-size: 2rem;
+}
