@@ -79,6 +79,19 @@ def logout():
     return redirect(url_for('home'))
 
 
+@app.route("/instructor_index")
+def instructor_index():
+    return render_template("instructor/instructor_index.html")
+
+
+@app.route("/grading")
+def grading():
+    return render_template("instructor/grading.html")
+
+
 @app.route("/student_center")
 def student_center():
     return render_template("student/student_center.html")
+
+
+
