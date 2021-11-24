@@ -48,3 +48,9 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField("Log In")
+
+
+class ComplaintForm(FlaskForm):
+    complainFor = StringField("Complain For", validators=[DataRequired()])
+    issue = CKEditorField("Tell us what is the issue", validators=[DataRequired()])
+    submit = SubmitField("Sumbit")

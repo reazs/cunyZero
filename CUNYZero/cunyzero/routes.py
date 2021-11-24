@@ -1,5 +1,5 @@
 from cunyzero import app, db, bcrypt
-from cunyzero.forms import StudentRegister, StaffRegister, LoginForm
+from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
 from cunyzero.models import Student, Instructor
@@ -94,4 +94,17 @@ def student_center():
     return render_template("student/student_center.html")
 
 
+@app.route("/student_details")
+def student_details():
+    return render_template("instructor/details.html")
 
+
+@app.route("/class_details")
+def class_details():
+    return render_template("student/class_details.html")
+
+
+@app.route("/complaint")
+def complaint():
+    form = ComplaintForm()
+    return render_template("student/complaint.html", form=form)

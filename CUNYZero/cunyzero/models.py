@@ -40,3 +40,19 @@ class Instructor(db.Model, UserMixin):
     # String representation of Student Model(for testing purposes)
     def __repr__(self):
         return f"Instructor('{self.f_name} {self.l_name}'"
+
+
+class CreateClass(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    class_name = db.Column(db.String, nullable=False)
+    class_id = db.Column(db.Integer, unique=True, nullable=False)
+    instructor = db.Column(db.String, nullable=False)
+    date = db.Column(db.String, nullable=False)
+    seat = db.Column(db.String, nullable=False)
+
+
+class Complain(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    complainer = db.Column(db.String, nullable=False)
+    complainTo = db.Column(db.String, nullable=False)
+    issue = db.Column(db.String, nullable=False)

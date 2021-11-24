@@ -28,47 +28,40 @@
   <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">student ID</th>
       <th scope="col">First</th>
       <th scope="col">Last</th>
       <th scope="col">email</th>
-      <th scope="col">grade</th>
-      <th scope="col">view</th>
+
 
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="row">132424</th>
       <td>unknown</td>
       <td>solid</td>
       <td>solid@gmail.com</td>
-      <td> <p>none</p></td>
-      <td> <a href="{{url_for('student_details')}}">details</a></td>
     </tr>
     <tr>
-      <th scope="row">435341</th>
       <td>reaz</td>
       <td>shakil</td>
       <td>reaz@gmail.com</td>
-      <td> <p>none</p></td>
-      <td> <a href="{{url_for('student_details')}}">details</a></td>
+
     </tr>
     <tr>
-      <th scope="row">853241</th>
       <td>student3</td>
       <td>weweno</td>
       <td>what@gmail.com</td>
-      <td> <p>none</p></td>
-      <td> <a href="{{url_for('student_details')}}">details</a></td>
+
     </tr>
   </tbody>
 </table>
-<div class="edit-btn">
-    <a class="btn btn-outline-dark">
-    Edit
-    <i class="fas fa-pen"></i>
-  </a>
-</div>
+
+    <div class="edit-btn">
+    <a href="{{  url_for('complaint')}}" class="btn btn-outline-danger">
+    File Complaint
+        <i class="fas fa-pen"></i>
+      </a>
+    </div>
+
 
 </div>

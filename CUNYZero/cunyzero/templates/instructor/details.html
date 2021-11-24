@@ -23,7 +23,7 @@
       .sized-box{
          height: 60px;
       }
-     
+
       h6.small-heading{
          color: grey;
          font-weight: bold;
@@ -54,18 +54,9 @@
          font-family: 'Merriweather', serif;
       }
 
-         .academic-card{
-
-    text-align: left;
-    padding: 20px 40px;
-    text-decoration: none;
-    color: black;
-    }
-
-    .academic-card:hover{
-        text-decoration: none;
-        color: black;
-    }
+      .accademic-container{
+         margin: 0 60px;
+      }
 
 
    </style>
@@ -75,62 +66,61 @@
    <section class="top-section">
 
          <br><br><br><br>
-       <h5 class="small-heading">Welcome Reaz</h5>
+
 
        <div class="sized-box"></div>
 
        <h6 class="small-heading">Academics</h6>
 
       <center>
-          
-       <div class="accademic-container">
+
+      <div class="accademic-container">
          <div class="row">
             <div class="col-lg-3 col-md-4">
+              <div class="academic-card">
 
-              <a type="button" href="{{url_for('class_details')}}" class="academic-card">
-                   <h4><strong>Class:</strong> CSC 335</h4>
-                  <h4><strong>Instructor:</strong> staff</h4>
-                   <h4><strong>seats:</strong> 24/29</h4>
-                   <h4><strong>status:</strong> open</h4>
-              </a>
-            </div>
-
-            <div class="col-lg-3 col-md-4">
-              <a type="button" href="{{ url_for('class_details') }}" class="academic-card">
-                  <h4><strong>Class:</strong> CSC 335</h4>
-                  <h4><strong>Instructor:</strong> staff</h4>
-                   <h4><strong>seats:</strong> 24/29</h4>
-                   <h4><strong>status:</strong> open</h4>
-              </a>
+              </div>
             </div>
             <div class="col-lg-3 col-md-4">
-              <a type="button" href="{{url_for('class_details')}}" class="academic-card">
-                  <h4><strong>Class:</strong> CSC 335</h4>
-                  <h4><strong>Instructor:</strong> staff</h4>
-                   <h4><strong>seats:</strong> 24/29</h4>
-                   <h4><strong>status:</strong> open</h4>
+              <div class="academic-card">
 
-              </a>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4">
+              <div class="academic-card">
+
+              </div>
             </div>
          </div>
       </div>
+      </center>
+      <div class="sized-box"></div>
+
+      <h6 class="small-heading">Achivement</h6>
+      <center>
+
+         <div class="row">
+           <div class="col-lg-9">
+             <div class="achivement-card">
+
+             </div>
+           </div>
+           <div class="col-lg-9">
+             <div class="achivement-card">
+
+             </div>
+           </div>
+           <div class="col-lg-9 ">
+             <div class="achivement-card">
+
+             </div>
+           </div>
+        </div>
         </center>
 
 
-        <div class="sized-box"></div>
 
-        <h6 class="small-heading">Notifications</h6>
 
-        <!-- for now i am just putting some space and saying no notification but later we can add the card for notification ;)-->
-        <div class="sized-box"></div>
-
-        <h6 class="grey-title">
-           You do not have any recent notification
-        </h6>
-        <div class="sized-box"></div>
-        <div class="sized-box"></div>
-
-        
 
     </section>
 
