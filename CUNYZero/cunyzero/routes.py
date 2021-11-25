@@ -2,7 +2,7 @@ from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
-from cunyzero.models import Student, Instructor
+from cunyzero.models import User
 from flask_login import login_user, current_user, logout_user
 
 @app.route("/")
@@ -21,7 +21,7 @@ def student_register():
     form = StudentRegister()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        student = Student(f_name=form.f_name.data, l_name=form.l_name.data, gpa=form.gpa.data, email=form.email.data, password=hashed_password)
+        student = User(f_name=form.f_name.data, l_name=form.l_name.data, gpa=form.gpa.data, email=form.email.data, password=hashed_password, role='student') 
         db.session.add(student)
         db.session.commit()
         flash('Your account has been created! Wait for the confirmation email!', 'success')
@@ -37,7 +37,7 @@ def staff_register():
     form = StaffRegister()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        instructor = Instructor(f_name=form.f_name.data, l_name=form.l_name.data, email=form.email.data, password=hashed_password)
+        instructor = User(f_name=form.f_name.data, l_name=form.l_name.data, email=form.email.data, password=hashed_password, role='instructor')
         db.session.add(instructor)
         db.session.commit()
         flash('Your account has been created! Wait for the confirmation email!', 'success')
@@ -49,8 +49,8 @@ def staff_register():
 def student_login():
     form = LoginForm()
     if form.validate_on_submit():
-        student = Student.query.filter_by(email=form.email.data).first()
-        if student and bcrypt.check_password_hash(student.password, form.password.data):
+        student = User.query.filter_by(email=form.email.data).first()
+        if student and bcrypt.check_password_hash(student.password, form.password.data) and student.role == 'student':
             login_user(student, remember=form.remember.data)
             return redirect(url_for('student_center'))
         else:
@@ -64,8 +64,8 @@ def instructor_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        instructor = Instructor.query.filter_by(email=form.email.data).first()
-        if instructor and bcrypt.check_password_hash(instructor.password, form.password.data):
+        instructor = User.query.filter_by(email=form.email.data).first()
+        if instructor and bcrypt.check_password_hash(instructor.password, form.password.data) and instructor.role == 'instructor':
             login_user(instructor, remember=form.remember.data)
             return redirect(url_for('home'))
         else:

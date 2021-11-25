@@ -7,7 +7,6 @@ from flask_login import LoginManager
 from flask_admin import Admin
 from flask_admin.contrib.sqla import  ModelView
 
-
 app = Flask(__name__)
 Bootstrap(app)
 ckeditor = CKEditor(app)
@@ -18,8 +17,10 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 
-
-# to aviod circular import
+# to avoid circular import 
+from cunyzero.models import User
+admin = Admin(app)
+admin.add_view(ModelView(User, db.session))
 
 from cunyzero import routes
 
