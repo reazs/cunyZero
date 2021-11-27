@@ -34,7 +34,9 @@ def getHonoroll(name):
 # this is for classes on the student page
 def getClasses(term):
     db.select([db.columns.Term, db.columns.CourseID, db.columns.CourseName, db.columns.Professor]).where(db.columns.Name.in_([term]))
-    
+
+
+# models we need left
 def Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     reviewer = db.Column(db.String, nullable=False)
@@ -48,15 +50,17 @@ def Warnings(db.Model):
     l_name = db.Column(db.String, nullable=False)
     warnings = db.Column(db.Integer, nullable=False)
 
+def Terms(db.Model):
+    term_start = db.Column(db.DateTime, primary_key=True)
+    term_end = db.Column(db.DateTime, primary_key=True)
+
 class ReviewForm(FlaskForm):
     ReviewFor = StringField("Review For", validators=[DataRequired()])
     Rating = StringField("Rate 1-10", validators=[DataRequired()])
     review = CKEditorField("Let us know what you think", validators=[DataRequired()])
     submit = SubmitField("Sumbit")
     
-class Terms(db.Model):
-    term_start = db.Column(db.Integer, primary_key=True)
-    term_end = db.Column(db.Integer, primary_key=True)
+
 
 #go into review and check average of reviews
 #add all of the reviews of the professor if < 2, then give Warnings
