@@ -2,11 +2,13 @@ from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
-from cunyzero.models import User
-from flask_login import login_user, current_user, logout_user
+from cunyzero.models import User, Student, Instructor
+from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
 def home():
+    if current_user.is_authenticated:
+        print(current_user.role)
     return render_template("home.html", courses=classes)
 
 
@@ -18,11 +20,15 @@ def register_state():
 
 @app.route("/student_register", methods=["POST","GET"])
 def student_register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = StudentRegister()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        student = User(f_name=form.f_name.data, l_name=form.l_name.data, gpa=form.gpa.data, email=form.email.data, password=hashed_password, role='student') 
-        db.session.add(student)
+        user1 = User(email=form.email.data, password=hashed_password, role='student') 
+        student1 = Student(f_name=form.f_name.data, l_name=form.l_name.data, gpa=form.gpa.data, user=user1)
+        db.session.add(user1)
+        db.session.add(student1)
         db.session.commit()
         flash('Your account has been created! Wait for the confirmation email!', 'success')
         return redirect(url_for('student_login'))
@@ -37,8 +43,10 @@ def staff_register():
     form = StaffRegister()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        instructor = User(f_name=form.f_name.data, l_name=form.l_name.data, email=form.email.data, password=hashed_password, role='instructor')
-        db.session.add(instructor)
+        user1 = User(email=form.email.data, password=hashed_password, role='instructor')
+        instructor1 = Instructor(f_name=form.f_name.data, l_name=form.l_name.data, user=user1)
+        db.session.add(user1)
+        db.session.add(instructor1)
         db.session.commit()
         flash('Your account has been created! Wait for the confirmation email!', 'success')
         return redirect(url_for('instructor_login'))
@@ -47,11 +55,13 @@ def staff_register():
 
 @app.route("/login", methods=["POST", "GET"])
 def student_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        student = User.query.filter_by(email=form.email.data).first()
-        if student and bcrypt.check_password_hash(student.password, form.password.data) and student.role == 'student':
-            login_user(student, remember=form.remember.data)
+        user1 = User.query.filter_by(email=form.email.data).first()
+        if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'student':
+            login_user(user1, remember=form.remember.data)
             return redirect(url_for('student_center'))
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
@@ -64,9 +74,9 @@ def instructor_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        instructor = User.query.filter_by(email=form.email.data).first()
-        if instructor and bcrypt.check_password_hash(instructor.password, form.password.data) and instructor.role == 'instructor':
-            login_user(instructor, remember=form.remember.data)
+        user1 = User.query.filter_by(email=form.email.data).first()
+        if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
+            login_user(user1, remember=form.remember.data)
             return redirect(url_for('home'))
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
@@ -74,6 +84,7 @@ def instructor_login():
 
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
@@ -90,7 +101,11 @@ def grading():
 
 
 @app.route("/student_center")
+@login_required
 def student_center():
+    if current_user.role =='instructor':
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     return render_template("student/student_center.html")
 
 

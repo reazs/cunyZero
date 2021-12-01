@@ -9,20 +9,45 @@ def load_user(user_id):
 
 # User model for the database
 class User(db.Model, UserMixin):
+    _tablename_ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    f_name = db.Column(db.String, nullable=False)
-    l_name = db.Column(db.String, nullable=False)
-    gpa = db.Column(db.Float)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String(60), nullable=False)
-    honors = db.Column(db.Boolean)
-    semester = db.Column(db.Integer)
+    approved = db.Column(db.Boolean, default=False)
     role = db.Column(db.String, nullable=False)
+    student = db.relationship('Student', backref='user', uselist=False)
+    instructor = db.relationship('Instructor', backref='user', uselist=False)
+    admin = db.relationship('Admin', backref='user', uselist=False)
 
     # String representation of User Model(for testing purposes)
     def __repr__(self):
-        return f"User('{self.role}'"
+        return f"User('{self.role}')"
 
+
+class Student(db.Model):
+    __tablename__ = 'student'
+    id = db.Column(db.Integer, primary_key=True)
+    f_name = db.Column(db.String, nullable=False)
+    l_name = db.Column(db.String, nullable=False)
+    gpa = db.Column(db.Float, nullable=False)
+    honors = db.Column(db.Boolean)
+    class_count = db.Column(db.Integer, default=0)
+    empl_id = db.Column(db.String(9), unique=True) 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Instructor(db.Model):
+    __tablename__ = 'instructor'
+    id = db.Column(db.Integer, primary_key=True)
+    f_name = db.Column(db.String, nullable=False)
+    l_name = db.Column(db.String, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Admin(db.Model):
+    __tablename__ = 'admin'
+    id = db.Column(db.Integer, primary_key=True)
+    f_name = db.Column(db.String, nullable=False)
+    l_name = db.Column(db.String, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class CreateClass(db.Model):
     id = db.Column(db.Integer, primary_key=True)
