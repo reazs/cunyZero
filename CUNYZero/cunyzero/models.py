@@ -63,3 +63,4 @@ class Complain(db.Model):
     complainer = db.Column(db.String, nullable=False)
     complainTo = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
+db.create_all()

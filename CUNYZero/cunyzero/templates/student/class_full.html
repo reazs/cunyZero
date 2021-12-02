@@ -1,0 +1,35 @@
+{% include "login_signup/header.html" %}
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Condiment&display=swap" rel="stylesheet">
+
+
+
+
+<style>
+ .big-heading{
+ font-size: 5rem;
+ }
+
+ .small-heading{
+ font-size: 2rem;
+ }
+</style>
+
+<br><br><br><br><br>
+<div class="container">
+
+    <h1 class="big-heading"><strong>Ops Sorry!</strong><br>Unfortunately this class is full.</h1>
+    <p class="small-heading"> Please try enrolling class that is open.</p>
+    <a href="{{url_for('enrollment')}}" class="btn btn-danger back-enroll-btn">Go Back <i class="fas fa-arrow-left"></i></a>
+
+</div>
