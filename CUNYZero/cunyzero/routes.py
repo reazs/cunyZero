@@ -77,7 +77,7 @@ def instructor_login():
         user1 = User.query.filter_by(email=form.email.data).first()
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
             login_user(user1, remember=form.remember.data)
-            return redirect(url_for('home'))
+            return redirect(url_for('instructor_index'))
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
     return render_template("login_signup/instructor_login.html", form=form)
@@ -91,7 +91,11 @@ def logout():
 
 
 @app.route("/instructor_index")
+@login_required
 def instructor_index():
+    if current_user.role =='student':
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     return render_template("instructor/instructor_index.html")
 
 
