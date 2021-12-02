@@ -1,0 +1,102 @@
+{% extends 'admin/master.html' %}
+
+
+{% block head_css %}
+{{ super() }}
+
+<link href="{{ url_for('static', filename='admin.css') }}" rel="stylesheet">
+
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto&display=swap" rel="stylesheet">
+
+
+
+<style>
+    .logo-titles{
+    text-align: center;
+    padding: 20px 0;
+    border-radius: 10px;
+    width: 20%;
+    box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
+
+}
+
+
+  h6.small-heading{
+         color: grey;
+         font-weight: bold;
+         margin-bottom: 40px;
+         font-size: 1.5rem;
+      }
+
+     .no-class{
+     height: 300px;
+     text-align: center;
+     color: grey; font-size: 2.5rem;
+     padding: 40px 20px;
+     }
+
+     .fa-plus-circle{
+     font-size: 30px;
+     }
+     .fa-plus-circle:hover{
+     color: teal;
+     cursor: pointer;
+     }
+
+</style>
+
+
+{% endblock %}
+
+
+
+{% block body %}
+
+
+<div class="container">
+    <section class="top-section">
+
+        <div class="logo-titles">
+             <h4 >Cuny Zero</h4>
+
+        </div>
+        <br> <br>
+        <div class="row">
+
+            <div class="col-md-8">
+                <h6 class="small-heading">Class</h6>
+            </div>
+            <div class="col-md-1">
+                <a href="{{ url_for('create_class') }}" ><i class="fas fa-plus-circle"></i></a>
+            </div>
+
+
+        </div>
+
+    </section>
+</div>
+
+
+
+<!-- if there is no class it will say there is no current class assign -->
+
+<div class="no-class">
+
+    <h1>There is no Current class assign.</h1>
+
+</div>
+
+<!-- else it will show the list of class that is assign and able to edit also make new class-->
+
+
+
+{% endblock %}

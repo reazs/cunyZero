@@ -1,5 +1,5 @@
 from cunyzero import app, db, bcrypt
-from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm
+from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm, CreateClassForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor
@@ -66,6 +66,8 @@ def student_login():
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
     return render_template("login_signup/student_login.html", form=form)
+
+
 
 
 @app.route("/instructor_login", methods=["POST", "GET"])
@@ -143,3 +145,15 @@ def class_details():
 def complaint():
     form = ComplaintForm()
     return render_template("student/complaint.html", form=form)
+
+
+@app.route("/admin")
+def admin_home():
+    render_template("admin/index.html" )
+
+
+@app.route("/create_class")
+def create_class():
+    form = CreateClassForm()
+
+    return render_template("admin/create_class.html",form=form)

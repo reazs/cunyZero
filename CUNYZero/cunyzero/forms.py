@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, FloatField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, FloatField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Email, ValidationError, Length, EqualTo, NumberRange
 from wtforms_validators import AlphaSpace
 from flask_ckeditor import CKEditor, CKEditorField
@@ -51,3 +51,16 @@ class ComplaintForm(FlaskForm):
     complainFor = StringField("Complain For", validators=[DataRequired()])
     issue = CKEditorField("Tell us what is the issue", validators=[DataRequired()])
     submit = SubmitField("Sumbit")
+
+
+class CreateClassForm(FlaskForm):
+    class_name = StringField("Class", validators=[DataRequired()])
+    instructor = StringField("Instructor Name", validators=[DataRequired()])
+    seat = IntegerField("Total Amount Of Seats", validators=[DataRequired()])
+    date = SelectField("Class Meeting Day", validators=[DataRequired()], choices=[
+        "MoWe", "TuTh", "MoFri", "Fri"
+    ] )
+    time = SelectField("Class Meeting Time", validators=[DataRequired()], choices=[
+        "9:00AM-10:30Am", "11:00AM-12:30PM", "2:00PM-3:45PM", "6:00PM-7:45PM"
+    ])
+    submit = SubmitField("Create Class")
