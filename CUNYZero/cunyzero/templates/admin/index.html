@@ -30,12 +30,6 @@
 }
 
 
-  h6.small-heading{
-         color: grey;
-         font-weight: bold;
-         margin-bottom: 40px;
-         font-size: 1.5rem;
-      }
 
      .no-class{
      height: 300px;
@@ -51,6 +45,84 @@
      color: teal;
      cursor: pointer;
      }
+
+     .small-heading{
+         margin: 10px 60px;
+      }
+
+      .sized-box{
+         height: 60px;
+      }
+
+      h6.small-heading{
+         color: grey;
+         font-weight: bold;
+         margin-bottom: 40px;
+      }
+      .academic-card{
+         height: 250px;
+         max-width: 300px;
+         margin: 10px 0;
+         box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+         border-radius: 10px;
+      }
+      .achivement-card{
+         height: 100px;
+         margin: 10px 60px;
+         border-radius: 10px;
+         box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+      }
+
+      .grey-title{
+         color: grey;
+         text-align: center;
+      }
+
+      .nav-link{
+         margin-left: 20px;
+         font-size: 1.2rem;
+         font-family: 'Merriweather', serif;
+      }
+
+         .academic-card{
+
+    text-align: left;
+    padding: 20px 40px;
+    text-decoration: none;
+    color: black;
+
+    }
+
+    .academic-card:hover{
+        text-decoration: none;
+        color: black;
+    }
+
+    .edit-btn{
+        text-decoration: none;
+        padding: 5px 20px;
+        border-style: solid;
+        border-color: #DC3545;
+        border-radius: 5px;
+        border-width: 1px;
+        color: black;
+
+
+    }
+
+    .edit-btn:hover{
+        text-decoration: none;
+        padding: 5px 20px;
+        border-style: solid;
+        border-color: red;
+        border-radius: 5px;
+        border-width: 1px;
+        background-color: #DC3545;
+        color:white;
+        cursor: pointer;
+
+
+    }
 
 </style>
 
@@ -89,14 +161,49 @@
 
 <!-- if there is no class it will say there is no current class assign -->
 
-<div class="no-class">
+<!--<div class="no-class">-->
 
-    <h1>There is no Current class assign.</h1>
+<!--    <h1>There is no Current class assign.</h1>-->
 
-</div>
+<!--</div>-->
 
 <!-- else it will show the list of class that is assign and able to edit also make new class-->
+ <div class="row">
+            <div class="col-lg-3 col-md-4">
 
+              <div class="academic-card">
+                   <h4><strong>Class:</strong> CSC 335</h4>
+                  <h4><strong>Instructor:</strong> staff</h4>
+                   <h4><strong>seats:</strong> 24/29</h4>
+                   <h4><strong>status:</strong> open</h4>
+                  <br>
+                   <a class="edit-btn">Edit <i class="far fa-edit"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4">
+
+              <div class="academic-card">
+                   <h4><strong>Class:</strong> CSC 335</h4>
+                  <h4><strong>Instructor:</strong> staff</h4>
+                   <h4><strong>seats:</strong> 24/29</h4>
+                   <h4><strong>status:</strong> open</h4>
+                  <br>
+                   <a class="edit-btn">Edit <i class="far fa-edit"></i></a>
+              </div>
+            </div>
+             <div class="col-lg-3 col-md-4">
+
+              <div class="academic-card">
+                   <h4><strong>Class:</strong> CSC 335</h4>
+                  <h4><strong>Instructor:</strong> staff</h4>
+                   <h4><strong>seats:</strong> 24/29</h4>
+                   <h4><strong>status:</strong> open</h4>
+                  <br>
+                   <a class="edit-btn">Edit <i class="far fa-edit"></i></a>
+              </div>
+            </div>
+ </div>
 
 
 {% endblock %}
