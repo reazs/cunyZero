@@ -152,8 +152,15 @@ def admin_home():
     render_template("admin/index.html" )
 
 
-@app.route("/create_class")
-def create_class():
-    form = CreateClassForm()
+@app.route("/class_edit")
+def class_edit():
+    # get the data from CreateClass model and put in default position
+    form = CreateClassForm(
+        class_name="CSC-332",
+        instructor="Zaid M.",
+        seat=20,
+        date="MonWe",
+        time="11:00AM-12:30PM",
 
-    return render_template("admin/create_class.html",form=form)
+    )
+    return render_template("admin/class_edit.html", form=form)

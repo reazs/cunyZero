@@ -1,0 +1,52 @@
+{% import "bootstrap/wtf.html" as wtf%}
+{% include "bootstrap/base.html" %}
+
+
+{% block style %}
+
+
+
+<style>
+    .small-heading{
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: grey;
+    }
+
+    .form-container{
+      width: 70%;
+      padding: 20px;
+      margin: 0 auto;
+    }
+    .btn-container{
+    text-align:right;
+    }
+    .cancel-btn{
+     background-color: white;
+     color: black;
+    }
+    .cancel-btn:hover{
+       background-color:#C9302C;
+       color: white;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<br><br>
+<div class="container">
+
+    <div class="form-container">
+        <div class="btn-container">
+            <a href="{{ url_for('admin_home') }}" class=" btn btn-danger cancel-btn">Cancel</a>
+        </div>
+        <h4 class="small-heading">Edit Class</h4>
+
+            {{wtf.quick_form(form)}}
+
+    </div>
+
+</div>
+{% endblock %}

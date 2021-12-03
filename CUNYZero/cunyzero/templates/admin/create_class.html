@@ -1,4 +1,10 @@
+{% extends 'admin/master.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
+
+
+
+{% block head_css %}
+{{ super() }}
 
 <link href="{{ url_for('static', filename='admin.css') }}" rel="stylesheet">
 
@@ -20,6 +26,11 @@
     }
 </style>
 
+
+{% endblock %}
+
+{% block body %}
+
 <br><br>
 
 <div class="container">
@@ -29,10 +40,12 @@
             <div class="col-lg-12 cancel-btn">
                 <a href="{{ url_for('admin_home') }}" class=" btn btn-outline-danger">Cancel</a>
             </div>
-            {{ wtf.quick_form(form, button_map={"submit": "primary"}) }}
+            {{ wtf.quick_form(form, button_map={"submit": "outline-primary"}) }}
         </div>
     </div>
 
 
 
 </div>
+
+{% endblock %}

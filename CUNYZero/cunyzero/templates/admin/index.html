@@ -47,7 +47,8 @@
      }
 
      .small-heading{
-         margin: 10px 60px;
+
+         font-size: 1.4rem;
       }
 
       .sized-box{
@@ -60,7 +61,7 @@
          margin-bottom: 40px;
       }
       .academic-card{
-         height: 250px;
+        padding: 20px 20px;
          max-width: 300px;
          margin: 10px 0;
          box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
@@ -98,31 +99,7 @@
         color: black;
     }
 
-    .edit-btn{
-        text-decoration: none;
-        padding: 5px 20px;
-        border-style: solid;
-        border-color: #DC3545;
-        border-radius: 5px;
-        border-width: 1px;
-        color: black;
 
-
-    }
-
-    .edit-btn:hover{
-        text-decoration: none;
-        padding: 5px 20px;
-        border-style: solid;
-        border-color: red;
-        border-radius: 5px;
-        border-width: 1px;
-        background-color: #DC3545;
-        color:white;
-        cursor: pointer;
-
-
-    }
 
 </style>
 
@@ -137,25 +114,15 @@
 <div class="container">
     <section class="top-section">
 
-        <div class="logo-titles">
-             <h4 >Cuny Zero</h4>
 
-        </div>
         <br> <br>
-        <div class="row">
 
-            <div class="col-md-8">
-                <h6 class="small-heading">Class</h6>
-            </div>
-            <div class="col-md-1">
-                <a href="{{ url_for('create_class') }}" ><i class="fas fa-plus-circle"></i></a>
-            </div>
+                <h6 class="small-heading">Assigned Classes</h6>
 
 
-        </div>
+
 
     </section>
-</div>
 
 
 
@@ -177,7 +144,7 @@
                    <h4><strong>seats:</strong> 24/29</h4>
                    <h4><strong>status:</strong> open</h4>
                   <br>
-                   <a class="edit-btn">Edit <i class="far fa-edit"></i></a>
+                   <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
               </div>
             </div>
 
@@ -189,7 +156,7 @@
                    <h4><strong>seats:</strong> 24/29</h4>
                    <h4><strong>status:</strong> open</h4>
                   <br>
-                   <a class="edit-btn">Edit <i class="far fa-edit"></i></a>
+                   <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
               </div>
             </div>
              <div class="col-lg-3 col-md-4">
@@ -200,10 +167,11 @@
                    <h4><strong>seats:</strong> 24/29</h4>
                    <h4><strong>status:</strong> open</h4>
                   <br>
-                   <a class="edit-btn">Edit <i class="far fa-edit"></i></a>
+                   <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
               </div>
             </div>
  </div>
+</div>
 
 
 {% endblock %}
