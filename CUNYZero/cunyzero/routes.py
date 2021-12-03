@@ -5,6 +5,7 @@ from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor
 from flask_login import login_user, current_user, logout_user, login_required
 
+
 @app.route("/")
 def home():
     if current_user.is_authenticated:
@@ -12,20 +13,19 @@ def home():
     return render_template("home.html", courses=classes)
 
 
-
 @app.route("/register_state", methods=["POST", "GET"])
 def register_state():
     return render_template("login_signup/register_state.html")
 
 
-@app.route("/student_register", methods=["POST","GET"])
+@app.route("/student_register", methods=["POST", "GET"])
 def student_register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = StudentRegister()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user1 = User(email=form.email.data, password=hashed_password, role='student') 
+        user1 = User(email=form.email.data, password=hashed_password, role='student')
         student1 = Student(f_name=form.f_name.data, l_name=form.l_name.data, gpa=form.gpa.data, user=user1)
         db.session.add(user1)
         db.session.add(student1)
@@ -33,7 +33,6 @@ def student_register():
         flash('Your account has been created! Wait for the confirmation email!', 'success')
         return redirect(url_for('student_login'))
     return render_template("login_signup/student_register.html", form=form)
-
 
 
 @app.route("/staff_register", methods=["POST", "GET"])
@@ -68,8 +67,6 @@ def student_login():
     return render_template("login_signup/student_login.html", form=form)
 
 
-
-
 @app.route("/instructor_login", methods=["POST", "GET"])
 def instructor_login():
     if current_user.is_authenticated:
@@ -85,6 +82,17 @@ def instructor_login():
     return render_template("login_signup/instructor_login.html", form=form)
 
 
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -95,7 +103,7 @@ def logout():
 @app.route("/instructor_index")
 @login_required
 def instructor_index():
-    if current_user.role =='student':
+    if current_user.role == 'student':
         flash('Access Denied!', 'danger')
         return redirect(url_for('home'))
     return render_template("instructor/instructor_index.html")
@@ -111,7 +119,6 @@ def enrollment():
     return render_template("student/enrollment.html")
 
 
-
 @app.route("/confirm_enroll")
 def confirm_enroll():
     return render_template("student/confirm_enroll.html")
@@ -125,7 +132,7 @@ def class_full():
 @app.route("/student_center")
 @login_required
 def student_center():
-    if current_user.role =='instructor':
+    if current_user.role == 'instructor':
         flash('Access Denied!', 'danger')
         return redirect(url_for('home'))
     return render_template("student/student_center.html")
@@ -149,10 +156,10 @@ def complaint():
 
 @app.route("/admin")
 def admin_home():
-    render_template("admin/index.html" )
+    render_template("admin/index.html")
 
 
-@app.route("/class_edit")
+@app.route("/class_edit", methods=["POST", "GET"])
 def class_edit():
     # get the data from CreateClass model and put in default position
     form = CreateClassForm(
@@ -164,3 +171,9 @@ def class_edit():
 
     )
     return render_template("admin/class_edit.html", form=form)
+
+
+@app.route("/need_approve")
+def need_approve():
+    logout_user()
+    return render_template("need_approve.html");

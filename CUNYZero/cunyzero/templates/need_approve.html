@@ -1,4 +1,3 @@
-{% include "login_signup/header.html" %}
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
 <!-- CSS only -->
@@ -28,8 +27,8 @@
 <br><br><br><br><br>
 <div class="container">
 
-    <h1 class="big-heading"><strong>Oops Sorry!</strong><br>Unfortunately this class is full.</h1>
-    <p class="small-heading"> Please try enrolling class that is open.</p>
-    <a href="{{url_for('enrollment')}}" class="btn btn-danger back-enroll-btn">Go Back <i class="fas fa-arrow-left"></i></a>
+    <h1 class="big-heading"><strong>Oops Sorry!</strong><br>Unfortunately Your account has not been approved yet.</h1>
+    <p class="small-heading"> Please try again later or contact the registrar for more info.</p>
+    <a href="{{url_for('contact')}}" class="btn btn-danger back-enroll-btn">Contact <i class="fas fa-phone"></i></a>
 
 </div>
