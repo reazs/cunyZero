@@ -179,6 +179,14 @@
     <h6 class="small-heading">New Students</h6>
 
       <table class="table table-striped">
+          {% if student is none : %}
+              <div class="no-class">
+
+                <h1>There is no Current class assign.</h1>
+
+            </div>
+          {% else : %}
+
   <thead>
     <tr>
       <th scope="col">First</th>
@@ -204,6 +212,7 @@
 
   </tbody>
 </table>
+    {% endif %}
 
 
 

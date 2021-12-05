@@ -66,7 +66,13 @@
         text-decoration: none;
         color: black;
     }
-
+    .no-class{
+     height: 300px;
+     text-align: center;
+     color: grey; font-size: 2.5rem;
+     padding: 40px 20px;
+     margin-top: 15%;
+     }
 
    </style>
 
@@ -75,6 +81,7 @@
    <section class="top-section">
 
          <br><br><br><br>
+       {% if status != "Set-Up" %}
 
        <h6 class="small-heading">Open Class</h6>
 
@@ -149,6 +156,15 @@
          </div>
       </div>
         </center>
+       {% else %}
+               <div class="no-class">
+
+                <center>
+                    <h1>The classes are being set-up by registrar Please wait.</h1>
+                </center>
+
+            </div>
+       {% endif %}
 
     </section>
 
