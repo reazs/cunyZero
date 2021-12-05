@@ -186,14 +186,25 @@
     <tr>
       <th scope="col">First</th>
       <th scope="col">Last</th>
-      <th scope="col">email</th>
+      <th scope="col">GPA</th>
         <td>Approval</td>
 
 
     </tr>
   </thead>
   <tbody>
+    {% for student in students %}
     <tr>
+      <td>{{ student.l_name }}</td>
+      <td>{{ student.f_name }}</td>
+      <td>{{ student.gpa }}</td>
+      <td>
+        <a href="{{url_for('accept', email='student@gmail.com')}}" class="btn btn-outline-success">Accept</a>
+        <a href="{{url_for('reject', email='student@gmail.com')}}" class="btn btn-outline-danger">Reject</a>
+    </td>
+    </tr>
+  {% endfor %}
+    <!-- <tr>
       <td>unknown</td>
       <td>solid</td>
       <td>solid@gmail.com</td>
@@ -225,7 +236,7 @@
 
         </td>
 
-    </tr>
+    </tr> -->
   </tbody>
 </table>
 
@@ -241,14 +252,23 @@
     <tr>
       <th scope="col">First</th>
       <th scope="col">Last</th>
-      <th scope="col">email</th>
         <td>Approval</td>
 
 
     </tr>
   </thead>
   <tbody>
+    {% for instructor in instructors %}
     <tr>
+      <td>{{ instructor.l_name }}</td>
+      <td>{{ instructor.f_name }}</td>
+      <td>
+        <a href="{{url_for('accept', email='student@gmail.com')}}" class="btn btn-outline-success">Accept</a>
+        <a href="{{url_for('reject', email='student@gmail.com')}}" class="btn btn-outline-danger">Reject</a>
+    </td>
+    </tr>
+  {% endfor %}
+    <!-- <tr>
       <td>unknown</td>
       <td>solid</td>
       <td>solid@gmail.com</td>
@@ -280,7 +300,7 @@
 
         </td>
 
-    </tr>
+    </tr> -->
   </tbody>
 </table>
 

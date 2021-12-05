@@ -13,7 +13,6 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String(60), nullable=False)
-    approved = db.Column(db.Boolean, default=False)
     role = db.Column(db.String, nullable=False)
     student = db.relationship('Student', backref='user', uselist=False)
     instructor = db.relationship('Instructor', backref='user', uselist=False)
@@ -29,6 +28,7 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     f_name = db.Column(db.String, nullable=False)
     l_name = db.Column(db.String, nullable=False)
+    approved = db.Column(db.Boolean, default=False)
     gpa = db.Column(db.Float, nullable=False)
     honors = db.Column(db.Boolean)
     class_count = db.Column(db.Integer, default=0)
@@ -40,6 +40,7 @@ class Instructor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     f_name = db.Column(db.String, nullable=False)
     l_name = db.Column(db.String, nullable=False)
+    approved = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Admin(db.Model):
@@ -57,10 +58,8 @@ class CreateClass(db.Model):
     date = db.Column(db.String, nullable=False)
     seat = db.Column(db.String, nullable=False)
 
-
 class Complain(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     complainer = db.Column(db.String, nullable=False)
     complainTo = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
-db.create_all()
