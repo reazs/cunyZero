@@ -158,10 +158,11 @@ def complaint():
     return render_template("student/complaint.html", form=form)
 
 
-@app.route("/admin")
+@app.route("/registrar")
 def admin_home():
-    print("hello")
-    render_template("admin/index.html")
+    students = Student.query.all()
+    instructors = Instructor.query.all()
+    return render_template("admin/index.html", students=students, instructors=instructors)
 
 
 @app.route("/class_edit", methods=["POST", "GET"])
@@ -175,7 +176,7 @@ def class_edit():
         time="11:00AM-12:30PM",
 
     )
-    return render_template("admin/class_edit.html", form=form)
+    return render_template("registrar/class_edit.html", form=form)
 
 
 @app.route("/need_approve")

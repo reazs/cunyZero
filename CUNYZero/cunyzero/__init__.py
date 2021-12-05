@@ -4,8 +4,8 @@ from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
-from flask_admin import Admin, BaseView, expose
-from flask_admin.contrib.sqla import  ModelView
+#from flask_admin import Admin, BaseView, expose
+#from flask_admin.contrib.sqla import  ModelView
 
 
 app = Flask(__name__)
@@ -21,22 +21,21 @@ login_manager.login_view = 'home'
 login_manager.login_message_category = 'info'
 
 # to avoid circular import 
-from cunyzero.models import User
-from CUNYZero.cunyzero.forms import CreateClassForm
+#from cunyzero.models import User
+#from cunyzero.forms import CreateClassForm
 
-admin = Admin(app, template_mode="bootstrap4")
-# admin.add_view(ModelView(User, db.session))
-
-
+#admin = Admin(app, template_mode="bootstrap4")
+#admin.add_view(ModelView(User, db.session))
 
 
-# class CreateClassView(BaseView):
-#     @expose("/")
-#     def index(self):
-#         form = CreateClassForm()
-#         return self.render("admin/create_class.html", form=form)
-#
-# admin.add_view(CreateClassView(name="Create Class", endpoint="create"))
+
+#class CreateClassView(BaseView):
+#    @expose("/")
+ #   def index(self):
+ #       form = CreateClassForm()
+ #       return self.render("admin/create_class.html", form=form)
+
+#admin.add_view(CreateClassView(name="Create Class", endpoint="create"))
 
 from cunyzero import routes
 
