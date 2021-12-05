@@ -66,10 +66,17 @@
     </div>
     <br><br>
            <div class="edit-btn">
+               {% if term_stat !="Register":%}
+               <a href="{{  url_for('running_period')}}" class="btn btn-outline-primary">
+            Confirm Enrollment <i class="far fa-check-circle"></i>
+
+              </a>
+               {% else: %}
             <a href="{{  url_for('student_center')}}" class="btn btn-outline-primary">
             Confirm Enrollment <i class="far fa-check-circle"></i>
 
               </a>
+               {% endif %}
             </div>
 </section>
 </center>

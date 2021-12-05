@@ -127,7 +127,7 @@ def enrollment():
 @app.route("/confirm_enroll<id>", methods=["GET", "POST"])
 def confirm_enroll(id):
     clas = Classes.query.filter_by(id=id).first()
-    return render_template("student/confirm_enroll.html", clas=clas)
+    return render_template("student/confirm_enroll.html", clas=clas, term_stat=TERM_STATUS)
 
 
 @app.route("/class_full")
@@ -265,3 +265,8 @@ def create_class():
 def view_complaint():
     complains = Complain.query.all()
     return render_template("admin/complain_view.html", complains=complains)
+
+
+@app.route("/running_period")
+def running_period():
+    return render_template("student/running_period.html")
