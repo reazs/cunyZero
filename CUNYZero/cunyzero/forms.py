@@ -63,4 +63,7 @@ class CreateClassForm(FlaskForm):
     time = SelectField("Class Meeting Time", validators=[DataRequired()], choices=[
         "9:00AM-10:30Am", "11:00AM-12:30PM", "2:00PM-3:45PM", "6:00PM-7:45PM"
     ])
+    changeTerm = SelectField("Change Terms", validators=[DataRequired()], choices=[
+         "set-up","Register", "running", "grading"
+    ])
     submit = SubmitField("Submit")
