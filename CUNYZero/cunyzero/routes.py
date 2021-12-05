@@ -62,8 +62,6 @@ def student_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == EMAIL and form.password.data == PASSWORD:
-            return redirect(url_for('admin_home'))
         user1 = User.query.filter_by(email=form.email.data).first()
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'student':
             login_user(user1, remember=form.remember.data)
@@ -79,16 +77,12 @@ def instructor_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        global EMAIL, PASSWORD
-        if form.email.data == EMAIL and form.password.data == PASSWORD:
-            return redirect(url_for('admin_home'))
+        user1 = User.query.filter_by(email=form.email.data).first()
+        if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
+            login_user(user1, remember=form.remember.data)
+            return redirect(url_for('instructor_index'))
         else:
-            user1 = User.query.filter_by(email=form.email.data).first()
-            if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
-                login_user(user1, remember=form.remember.data)
-                return redirect(url_for('instructor_index'))
-            else:
-                flash('Login unsuccessfull! Check your email and/or password', 'danger')
+            flash('Login unsuccessfull! Check your email and/or password', 'danger')
     return render_template("login_signup/instructor_login.html", form=form)
 
 
@@ -170,7 +164,9 @@ def admin_home():
     form = TermForm(term=TERM_STATUS)
     students = Student.query.all()
     instructors = Instructor.query.all()
-
+    users = User
+    for student in students:
+        print(User.query.filter_by(id=student.user_id).first().email)
     if form.validate_on_submit():
         TERM_STATUS = form.term.data
     return render_template("admin/index.html", students=students, instructors=instructors, form=form)
@@ -187,7 +183,7 @@ def class_edit():
         time="11:00AM-12:30PM",
 
     )
-    return render_template("admin/class_edit.html", form=form)
+    return render_template("registrar/class_edit.html", form=form)
 
 
 @app.route("/need_approve")
@@ -197,8 +193,9 @@ def need_approve():
 
 
 @app.route("/reject")
-def reject(email):
+def reject(id):
       try:
+          email = User.query.filter_by(id=id).first().email
           with smtplib.SMTP("smtp.gmail.com", 587) as connection:
               connection.starttls()
               connection.login(user=EMAIL, password=PASSWORD)
@@ -217,8 +214,9 @@ def reject(email):
 
 
 @app.route("/accept")
-def accept(email):
+def accept(id):
       try:
+          email = User.query.filter_by(id=id).first().email
           with smtplib.SMTP("smtp.gmail.com", 587) as connection:
               connection.starttls()
               connection.login(user=EMAIL, password=PASSWORD)
