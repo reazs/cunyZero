@@ -23,6 +23,11 @@ class User(db.Model, UserMixin):
         return f"User('{self.role}')"
 
 
+enrollment = db.Table('enrollment', 
+    db.Column('student_id', db.Integer, db.ForeignKey('student.id')),
+    db.Column('class_id', db.Integer, db.ForeignKey('classes.id'))
+)
+
 class Student(db.Model):
     __tablename__ = 'student'
     id = db.Column(db.Integer, primary_key=True)
@@ -34,6 +39,8 @@ class Student(db.Model):
     class_count = db.Column(db.Integer, default=0)
     empl_id = db.Column(db.String(9), unique=True) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    classes = db.relationship("Classes", secondary=enrollment, backref=db.backref('students', lazy='dynamic'))
+   
 
 class Instructor(db.Model):
     __tablename__ = 'instructor'
@@ -50,16 +57,25 @@ class Admin(db.Model):
     l_name = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-class CreateClass(db.Model):
+class Classes(db.Model):
+    __tablename__ = 'classes'
     id = db.Column(db.Integer, primary_key=True)
     class_name = db.Column(db.String, nullable=False)
     class_id = db.Column(db.Integer, unique=True, nullable=False)
     instructor = db.Column(db.String, nullable=False)
     date = db.Column(db.String, nullable=False)
     seat = db.Column(db.String, nullable=False)
+    student = db.relationship("Student", secondary=enrollment)
+
+
+
+
+    
 
 class Complain(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     complainer = db.Column(db.String, nullable=False)
     complainTo = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
+
+
