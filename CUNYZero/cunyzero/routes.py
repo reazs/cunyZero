@@ -2,7 +2,7 @@ from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm, CreateClassForm, TermForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
-from cunyzero.models import User, Student, Instructor, CreateClass, Complain
+from cunyzero.models import User, Student, Instructor, Classes, Complain
 from flask_login import login_user, current_user, logout_user, login_required
 
 import smtplib
@@ -120,13 +120,14 @@ def grading():
 
 @app.route("/enrollment")
 def enrollment():
+    classes = Classes.query.all()
+    return render_template("student/enrollment.html", status=TERM_STATUS, classes=classes)
 
-    return render_template("student/enrollment.html", status=TERM_STATUS)
 
-
-@app.route("/confirm_enroll")
-def confirm_enroll():
-    return render_template("student/confirm_enroll.html")
+@app.route("/confirm_enroll<id>", methods=["GET", "POST"])
+def confirm_enroll(id):
+    clas = Classes.query.filter_by(id=id).first()
+    return render_template("student/confirm_enroll.html", clas=clas)
 
 
 @app.route("/class_full")
@@ -246,7 +247,7 @@ def accept(id):
 def create_class():
     form = CreateClassForm()
     if form.validate_on_submit():
-        new_class = CreateClass(
+        new_class = Classes(
             class_name=form.class_name.data,
             class_id=12342,
             instructor=form.instructor.data,
