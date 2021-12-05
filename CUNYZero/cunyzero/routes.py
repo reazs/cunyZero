@@ -5,6 +5,10 @@ from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor
 from flask_login import login_user, current_user, logout_user, login_required
 
+import smtplib
+
+email = "johnweweno@gmail.com"
+password = "123National!"
 
 @app.route("/")
 def home():
@@ -176,4 +180,24 @@ def class_edit():
 @app.route("/need_approve")
 def need_approve():
     logout_user()
-    return render_template("need_approve.html");
+    return render_template("need_approve.html")
+
+
+@app.route("/reject")
+def reject():
+      try:
+          with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+              connection.starttls()
+              connection.login(user=email, password=password)
+              connection.sendmail(
+                  from_addr=email,
+                  to_addrs="weweno121@gmail.com",
+                  msg=f"Subject: We are sorry to say you have been rejected!\n\nmaybe you can try applying for it in next semester.....")
+
+
+              return redirect(url_for('admin_home'))
+      except Exception as e:
+        print(e)
+
+
+        return redirect(url_for('admin_home'))
