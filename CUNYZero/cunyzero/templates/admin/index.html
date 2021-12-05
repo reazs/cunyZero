@@ -1,4 +1,4 @@
-
+{% import "bootstrap/wtf.html" as wtf %}
 
 
 <link href="{{ url_for('static', filename='admin.css') }}" rel="stylesheet">
@@ -118,8 +118,9 @@
 
         <br> <br>
 
-                <h6 class="small-heading">Assigned Classes</h6>
+                <h6 class="small-heading">Change Terms</h6>
 
+         {{ wtf.quick_form(form, button_map={"submit": "outline-success"}) }}
 
 
 
@@ -136,6 +137,8 @@
 <!--</div>-->
 
 <!-- else it will show the list of class that is assign and able to edit also make new class-->
+
+    <br>  <h6 class="small-heading">Assigned Classes</h6>
  <div class="row">
             <div class="col-lg-3 col-md-4">
 
