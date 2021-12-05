@@ -2,7 +2,7 @@ from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm, CreateClassForm, TermForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
-from cunyzero.models import User, Student, Instructor, CreateClass
+from cunyzero.models import User, Student, Instructor, CreateClass, Complain
 from flask_login import login_user, current_user, logout_user, login_required
 
 import smtplib
@@ -153,9 +153,18 @@ def class_details():
     return render_template("student/class_details.html")
 
 
-@app.route("/complaint")
+@app.route("/complaint", methods=["POST", "GET"])
 def complaint():
     form = ComplaintForm()
+    if form.validate_on_submit():
+        new_complain = Complain(
+            complainer=current_user.email,
+            complainTo=form.complainFor.data,
+            issue=form.issue.data,
+        )
+        db.session.add(new_complain)
+        db.session.commit()
+        return redirect("student_center")
     return render_template("student/complaint.html", form=form)
 
 
@@ -231,9 +240,7 @@ def accept(id):
       except Exception as e:
         print(e)
 
-
         return redirect(url_for('admin_home'))
-
 
 
 @app.route("/create_class", methods=["POST", "GET"])
@@ -252,3 +259,9 @@ def create_class():
         db.session.commit()
 
     return render_template("admin/create_class.html", form=form)
+
+
+@app.route("/view_complaint")
+def view_complaint():
+    complains = Complain.query.all()
+    return render_template("admin/complain_view.html", complains=complains)
