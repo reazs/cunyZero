@@ -1,5 +1,5 @@
 from cunyzero import app, db, bcrypt
-from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm, CreateClassForm
+from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm, CreateClassForm, TermForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor
@@ -9,7 +9,7 @@ import smtplib
 
 EMAIL = "johnweweno@gmail.com"
 PASSWORD = "123National!"
-
+TERM_STATUS = "Set-Up"
 @app.route("/")
 def home():
     if current_user.is_authenticated:
@@ -158,11 +158,16 @@ def complaint():
     return render_template("student/complaint.html", form=form)
 
 
-@app.route("/registrar")
+@app.route("/registrar", methods=["GET", "POST"])
 def admin_home():
+    global TERM_STATUS
+    form = TermForm(term=TERM_STATUS)
     students = Student.query.all()
     instructors = Instructor.query.all()
-    return render_template("admin/index.html", students=students, instructors=instructors)
+
+    if form.validate_on_submit():
+        TERM_STATUS = form.term.data
+    return render_template("admin/index.html", students=students, instructors=instructors, form=form)
 
 
 @app.route("/class_edit", methods=["POST", "GET"])
