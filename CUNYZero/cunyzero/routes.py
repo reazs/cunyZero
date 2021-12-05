@@ -120,7 +120,8 @@ def grading():
 
 @app.route("/enrollment")
 def enrollment():
-    return render_template("student/enrollment.html")
+
+    return render_template("student/enrollment.html", status=TERM_STATUS)
 
 
 @app.route("/confirm_enroll")
@@ -182,7 +183,7 @@ def class_edit():
         time="11:00AM-12:30PM",
 
     )
-    return render_template("registrar/class_edit.html", form=form)
+    return render_template("admin/class_edit.html", form=form)
 
 
 @app.route("/need_approve")

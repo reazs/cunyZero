@@ -147,7 +147,6 @@
                   <p class="line-height"><strong>Instructor:</strong> staff</p>
                    <p class="line-height"><strong>seats:</strong> 24/29</p>
                    <p class="line-height"><strong>status:</strong> open</p>
-                  <br>
                    <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
               </div>
             </div>
@@ -159,7 +158,6 @@
                   <p class="line-height"><strong>Instructor:</strong> staff</p>
                    <p class="line-height"><strong>seats:</strong> 24/29</p>
                    <p class="line-height"><strong>status:</strong> open</p>
-                  <br>
                    <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
               </div>
             </div>
@@ -170,7 +168,6 @@
                   <p class="line-height"><strong>Instructor:</strong> staff</p>
                    <p class="line-height"><strong>seats:</strong> 24/29</p>
                    <p class="line-height"><strong>status:</strong> open</p>
-                  <br>
                    <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
               </div>
             </div>
@@ -182,6 +179,14 @@
     <h6 class="small-heading">New Students</h6>
 
       <table class="table table-striped">
+          {% if student is none : %}
+              <div class="no-class">
+
+                <h1>There is no Current class assign.</h1>
+
+            </div>
+          {% else : %}
+
   <thead>
     <tr>
       <th scope="col">First</th>
@@ -207,6 +212,7 @@
 
   </tbody>
 </table>
+    {% endif %}
 
 
 
@@ -214,7 +220,13 @@
       <br>
 
     <h6 class="small-heading">New Instructors</h6>
+    {% if instructor is none: %}
+    <div class="no-class">
 
+        <h1>There is no Current class assign.</h1>
+
+    </div>
+    {% else: %}
       <table class="table table-striped">
   <thead>
     <tr>
@@ -224,6 +236,8 @@
     </tr>
   </thead>
   <tbody>
+
+
     {% for instructor in instructors %}
     <tr>
       <td>{{ instructor.f_name }}</td>
@@ -234,6 +248,7 @@
     </td>
     </tr>
   {% endfor %}
+   {% endif %}
     <!-- <tr>
       <td>unknown</td>
       <td>solid</td>
