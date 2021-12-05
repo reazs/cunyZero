@@ -62,6 +62,8 @@ def student_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
+        if form.email.data == EMAIL and form.password.data == PASSWORD:
+            return redirect(url_for('admin_home'))
         user1 = User.query.filter_by(email=form.email.data).first()
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'student':
             login_user(user1, remember=form.remember.data)
@@ -77,12 +79,16 @@ def instructor_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user1 = User.query.filter_by(email=form.email.data).first()
-        if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
-            login_user(user1, remember=form.remember.data)
-            return redirect(url_for('instructor_index'))
+        global EMAIL, PASSWORD
+        if form.email.data == EMAIL and form.password.data == PASSWORD:
+            return redirect(url_for('admin_home'))
         else:
-            flash('Login unsuccessfull! Check your email and/or password', 'danger')
+            user1 = User.query.filter_by(email=form.email.data).first()
+            if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
+                login_user(user1, remember=form.remember.data)
+                return redirect(url_for('instructor_index'))
+            else:
+                flash('Login unsuccessfull! Check your email and/or password', 'danger')
     return render_template("login_signup/instructor_login.html", form=form)
 
 
@@ -181,7 +187,7 @@ def class_edit():
         time="11:00AM-12:30PM",
 
     )
-    return render_template("registrar/class_edit.html", form=form)
+    return render_template("admin/class_edit.html", form=form)
 
 
 @app.route("/need_approve")
@@ -191,14 +197,14 @@ def need_approve():
 
 
 @app.route("/reject")
-def reject():
+def reject(email):
       try:
           with smtplib.SMTP("smtp.gmail.com", 587) as connection:
               connection.starttls()
               connection.login(user=EMAIL, password=PASSWORD)
               connection.sendmail(
                   from_addr=EMAIL,
-                  to_addrs="weweno121@gmail.com",
+                  to_addrs=email,
                   msg=f"Subject: We are sorry to say you have been rejected!\n\nmaybe you can try applying for it in next semester.....")
 
 
@@ -211,14 +217,14 @@ def reject():
 
 
 @app.route("/accept")
-def accept():
+def accept(email):
       try:
           with smtplib.SMTP("smtp.gmail.com", 587) as connection:
               connection.starttls()
               connection.login(user=EMAIL, password=PASSWORD)
               connection.sendmail(
                   from_addr=EMAIL,
-                  to_addrs="weweno121@gmail.com",
+                  to_addrs=email,
                   msg=f"Subject: Congrats you have been accepted!\n\nyay you made it awesome :).....")
 
 
