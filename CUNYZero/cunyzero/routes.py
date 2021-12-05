@@ -164,7 +164,9 @@ def admin_home():
     form = TermForm(term=TERM_STATUS)
     students = Student.query.all()
     instructors = Instructor.query.all()
-
+    users = User
+    for student in students:
+        print(User.query.filter_by(id=student.user_id).first().email)
     if form.validate_on_submit():
         TERM_STATUS = form.term.data
     return render_template("admin/index.html", students=students, instructors=instructors, form=form)
@@ -191,14 +193,15 @@ def need_approve():
 
 
 @app.route("/reject")
-def reject():
+def reject(id):
       try:
+          email = User.query.filter_by(id=id).first().email
           with smtplib.SMTP("smtp.gmail.com", 587) as connection:
               connection.starttls()
               connection.login(user=EMAIL, password=PASSWORD)
               connection.sendmail(
                   from_addr=EMAIL,
-                  to_addrs="weweno121@gmail.com",
+                  to_addrs=email,
                   msg=f"Subject: We are sorry to say you have been rejected!\n\nmaybe you can try applying for it in next semester.....")
 
 
@@ -211,14 +214,15 @@ def reject():
 
 
 @app.route("/accept")
-def accept():
+def accept(id):
       try:
+          email = User.query.filter_by(id=id).first().email
           with smtplib.SMTP("smtp.gmail.com", 587) as connection:
               connection.starttls()
               connection.login(user=EMAIL, password=PASSWORD)
               connection.sendmail(
                   from_addr=EMAIL,
-                  to_addrs="weweno121@gmail.com",
+                  to_addrs=email,
                   msg=f"Subject: Congrats you have been accepted!\n\nyay you made it awesome :).....")
 
 

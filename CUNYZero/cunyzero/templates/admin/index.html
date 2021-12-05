@@ -199,8 +199,8 @@
       <td>{{ student.f_name }}</td>
       <td>{{ student.gpa }}</td>
       <td>
-        <a href="{{url_for('accept', email='student@gmail.com')}}" class="btn btn-outline-success">Accept</a>
-        <a href="{{url_for('reject', email='student@gmail.com')}}" class="btn btn-outline-danger">Reject</a>
+        <a href="{{url_for('accept', id=student.user_id)}}" class="btn btn-outline-success">Accept</a>
+        <a href="{{url_for('reject', id=student.user_id)}}" class="btn btn-outline-danger">Reject</a>
     </td>
     </tr>
   {% endfor %}
@@ -221,8 +221,6 @@
       <th scope="col">First</th>
       <th scope="col">Last</th>
         <td>Approval</td>
-
-
     </tr>
   </thead>
   <tbody>
