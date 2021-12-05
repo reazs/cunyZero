@@ -2,7 +2,7 @@ from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm, CreateClassForm, TermForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
-from cunyzero.models import User, Student, Instructor
+from cunyzero.models import User, Student, Instructor, CreateClass
 from flask_login import login_user, current_user, logout_user, login_required
 
 import smtplib
@@ -235,7 +235,19 @@ def accept(id):
 
 
 
-@app.route("/create_class")
+@app.route("/create_class", methods=["POST", "GET"])
 def create_class():
     form = CreateClassForm()
+    if form.validate_on_submit():
+        new_class = CreateClass(
+            class_name=form.class_name.data,
+            class_id=12342,
+            instructor=form.instructor.data,
+            date=form.date.data,
+            seat=form.seat.data,
+
+        )
+        db.session.add(new_class)
+        db.session.commit()
+
     return render_template("admin/create_class.html", form=form)

@@ -179,7 +179,7 @@
     <h6 class="small-heading">New Students</h6>
 
       <table class="table table-striped">
-          {% if student is none : %}
+          {% if students is none : %}
               <div class="no-class">
 
                 <h1>There is no Current class assign.</h1>
@@ -223,7 +223,7 @@
     {% if instructor is none: %}
     <div class="no-class">
 
-        <h1>There is no Current class assign.</h1>
+        <h1>There is no New Instructor.</h1>
 
     </div>
     {% else: %}
@@ -249,39 +249,7 @@
     </tr>
   {% endfor %}
    {% endif %}
-    <!-- <tr>
-      <td>unknown</td>
-      <td>solid</td>
-      <td>solid@gmail.com</td>
-                <td>
-            <a href="" class="btn btn-outline-success">Accept</a>
-            <a class="btn btn-outline-danger">Reject</a>
 
-        </td>
-
-    </tr>
-    <tr>
-      <td>reaz</td>
-      <td>shakil</td>
-      <td>reaz@gmail.com</td>
-        <td>
-            <a class="btn btn-outline-success">Accept</a>
-            <a class="btn btn-outline-danger">Reject</a>
-
-        </td>
-
-    </tr>
-    <tr>
-      <td>student3</td>
-      <td>weweno</td>
-      <td>what@gmail.com</td>
-        <td>
-            <a class="btn btn-outline-success">Accept</a>
-            <a class="btn btn-outline-danger">Reject</a>
-
-        </td>
-
-    </tr> -->
   </tbody>
 </table>
 

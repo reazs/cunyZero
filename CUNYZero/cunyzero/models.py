@@ -68,10 +68,6 @@ class Classes(db.Model):
     student = db.relationship("Student", secondary=enrollment)
 
 
-
-
-    
-
 class Complain(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     complainer = db.Column(db.String, nullable=False)
