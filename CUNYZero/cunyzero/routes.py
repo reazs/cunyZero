@@ -161,14 +161,13 @@ def complaint():
 @app.route("/registrar", methods=["GET", "POST"])
 def admin_home():
     global TERM_STATUS
+    print(TERM_STATUS)
     form = TermForm(term=TERM_STATUS)
     students = Student.query.all()
     instructors = Instructor.query.all()
-    users = User
-    for student in students:
-        print(User.query.filter_by(id=student.user_id).first().email)
     if form.validate_on_submit():
         TERM_STATUS = form.term.data
+        return redirect(url_for("admin_home"))
     return render_template("admin/index.html", students=students, instructors=instructors, form=form)
 
 
@@ -192,7 +191,7 @@ def need_approve():
     return render_template("need_approve.html")
 
 
-@app.route("/reject")
+@app.route("/reject/<id>")
 def reject(id):
       try:
           email = User.query.filter_by(id=id).first().email
@@ -213,7 +212,7 @@ def reject(id):
         return redirect(url_for('admin_home'))
 
 
-@app.route("/accept")
+@app.route("/accept/<id>")
 def accept(id):
       try:
           email = User.query.filter_by(id=id).first().email

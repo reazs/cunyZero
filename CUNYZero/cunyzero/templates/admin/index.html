@@ -195,8 +195,8 @@
   <tbody>
     {% for student in students %}
     <tr>
-      <td>{{ student.l_name }}</td>
       <td>{{ student.f_name }}</td>
+      <td>{{ student.l_name }}</td>
       <td>{{ student.gpa }}</td>
       <td>
         <a href="{{url_for('accept', id=student.user_id)}}" class="btn btn-outline-success">Accept</a>
@@ -226,11 +226,11 @@
   <tbody>
     {% for instructor in instructors %}
     <tr>
-      <td>{{ instructor.l_name }}</td>
       <td>{{ instructor.f_name }}</td>
+      <td>{{ instructor.l_name }}</td>
       <td>
-        <a href="{{url_for('accept', email='student@gmail.com')}}" class="btn btn-outline-success">Accept</a>
-        <a href="{{url_for('reject', email='student@gmail.com')}}" class="btn btn-outline-danger">Reject</a>
+        <a href="{{url_for('accept', id=instructor.user_id)}}" class="btn btn-outline-success">Accept</a>
+        <a href="{{url_for('reject', id=instructor.user_id)}}" class="btn btn-outline-danger">Reject</a>
     </td>
     </tr>
   {% endfor %}
