@@ -34,6 +34,7 @@ class Student(db.Model):
     class_count = db.Column(db.Integer, default=0)
     empl_id = db.Column(db.String(9), unique=True) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    klass_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
 
 class Instructor(db.Model):
     __tablename__ = 'instructor'
@@ -50,16 +51,22 @@ class Admin(db.Model):
     l_name = db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+
 class CreateClass(db.Model):
+    __tablename__ = "classes"
     id = db.Column(db.Integer, primary_key=True)
     class_name = db.Column(db.String, nullable=False)
     class_id = db.Column(db.Integer, unique=True, nullable=False)
     instructor = db.Column(db.String, nullable=False)
     date = db.Column(db.String, nullable=False)
     seat = db.Column(db.String, nullable=False)
+    student = db.relationship("Student", backref="student")
+
 
 class Complain(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     complainer = db.Column(db.String, nullable=False)
     complainTo = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
+
+db.create_all()
