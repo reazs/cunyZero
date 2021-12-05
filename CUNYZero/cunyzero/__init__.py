@@ -25,16 +25,18 @@ from cunyzero.models import User
 from CUNYZero.cunyzero.forms import CreateClassForm
 
 admin = Admin(app, template_mode="bootstrap4")
-admin.add_view(ModelView(User, db.session))
+# admin.add_view(ModelView(User, db.session))
 
 
-class CreateClassView(BaseView):
-    @expose("/")
-    def index(self):
-        form = CreateClassForm()
-        return self.render("admin/create_class.html", form=form)
 
-admin.add_view(CreateClassView(name="Create Class", endpoint="create"))
+
+# class CreateClassView(BaseView):
+#     @expose("/")
+#     def index(self):
+#         form = CreateClassForm()
+#         return self.render("admin/create_class.html", form=form)
+#
+# admin.add_view(CreateClassView(name="Create Class", endpoint="create"))
 
 from cunyzero import routes
 

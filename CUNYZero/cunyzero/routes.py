@@ -160,6 +160,7 @@ def complaint():
 
 @app.route("/admin")
 def admin_home():
+    print("hello")
     render_template("admin/index.html")
 
 
@@ -221,3 +222,10 @@ def accept():
 
 
         return redirect(url_for('admin_home'))
+
+
+
+@app.route("/create_class")
+def create_class():
+    form = CreateClassForm()
+    return render_template("admin/create_class.html", form=form)

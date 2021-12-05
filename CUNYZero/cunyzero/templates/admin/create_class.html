@@ -1,10 +1,8 @@
-{% extends 'admin/master.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 
 
-{% block head_css %}
-{{ super() }}
+
 
 <link href="{{ url_for('static', filename='admin.css') }}" rel="stylesheet">
 
@@ -27,9 +25,9 @@
 </style>
 
 
-{% endblock %}
 
-{% block body %}
+
+
 
 <br><br>
 
@@ -48,4 +46,3 @@
 
 </div>
 
-{% endblock %}
