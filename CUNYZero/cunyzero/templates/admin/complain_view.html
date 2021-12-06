@@ -48,7 +48,7 @@
   <thead>
     <tr>
       <th scope="col">Complainer</th>
-      <th scope="col">Complain To</th>
+      <th scope="col">ComplainFor</th>
       <th scope="col">Content</th>
         <td>Approve</td>
 
@@ -65,8 +65,10 @@
       <td> {{complain.complainTo}} </td>
       <td >{{complain.issue | safe }}</td>
       <td>
-        <a  class="btn btn-outline-success">Accept</a>
+        <div class="row">
+            <a  class="btn btn-outline-success">Accept</a>
         <a class="btn btn-outline-danger">Denny</a>
+        </div>
     </td>
     </tr>
     {% endfor %}

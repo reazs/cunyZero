@@ -167,9 +167,11 @@ def class_details():
 @app.route("/complaint", methods=["POST", "GET"])
 def complaint():
     form = ComplaintForm()
+    student = Student.query.filter_by(id=current_user.id).first()
+    complainer = student.f_name + " "+ student.l_name
     if form.validate_on_submit():
         new_complain = Complain(
-            complainer=current_user.email,
+            complainer=complainer,
             complainTo=form.complainFor.data,
             issue=form.issue.data,
         )
