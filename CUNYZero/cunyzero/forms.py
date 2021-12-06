@@ -7,6 +7,7 @@ from cunyzero import app
 from cunyzero.models import User
 
 
+
 class StudentRegister(FlaskForm):
     f_name = StringField("First name", validators=[DataRequired(), AlphaSpace()])
     l_name = StringField("Last name", validators=[DataRequired(), AlphaSpace()])
@@ -48,14 +49,17 @@ class LoginForm(FlaskForm):
 
 
 class ComplaintForm(FlaskForm):
+
     complainFor = StringField("Complain For", validators=[DataRequired()])
     issue = CKEditorField("Tell us what is the issue", validators=[DataRequired()])
     submit = SubmitField("Sumbit")
 
 
 class CreateClassForm(FlaskForm):
+
+
     class_name = StringField("Class", validators=[DataRequired()])
-    instructor = StringField("Instructor Name", validators=[DataRequired()])
+    instructor = StringField("Instructor Name", validators=[DataRequired()], )
     seat = IntegerField("Total Amount Of Seats", validators=[DataRequired()])
     date = SelectField("Class Meeting Day", validators=[DataRequired()], choices=[
         "MoWe", "TuTh", "MoFri", "Fri"

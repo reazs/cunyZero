@@ -10,6 +10,7 @@ import smtplib
 EMAIL = "johnweweno@gmail.com"
 PASSWORD = "123National!"
 TERM_STATUS = "Set-Up"
+
 @app.route("/")
 def home():
     if current_user.is_authenticated:
@@ -65,6 +66,11 @@ def student_login():
         user1 = User.query.filter_by(email=form.email.data).first()
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'student':
             login_user(user1, remember=form.remember.data)
+
+            new_student = Student.query.filter_by(user_id=user1.id).first()
+            if new_student.approved == False:
+                return redirect(url_for("need_approve"))
+
             return redirect(url_for('student_center'))
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
@@ -80,6 +86,10 @@ def instructor_login():
         user1 = User.query.filter_by(email=form.email.data).first()
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
             login_user(user1, remember=form.remember.data)
+            new_instructor = Instructor.query.filter_by(user_id=user1.id).first()
+            if new_instructor.approved == False:
+                return redirect(url_for("need_approve"))
+
             return redirect(url_for('instructor_index'))
         else:
             flash('Login unsuccessfull! Check your email and/or password', 'danger')
@@ -176,20 +186,23 @@ def admin_home():
     form = TermForm(term=TERM_STATUS)
     students = Student.query.all()
     instructors = Instructor.query.all()
+    classes = Classes.query.all()
     if form.validate_on_submit():
         TERM_STATUS = form.term.data
         return redirect(url_for("admin_home"))
-    return render_template("admin/index.html", students=students, instructors=instructors, form=form)
+    return render_template("admin/index.html", students=students, instructors=instructors, form=form, classes=classes)
 
 
-@app.route("/class_edit", methods=["POST", "GET"])
-def class_edit():
+@app.route("/class_edit/id=<id>", methods=["POST", "GET"])
+def class_edit(id):
     # get the data from CreateClass model and put in default position
+    clas = Classes.query.filter_by(id=id).first()
+
     form = CreateClassForm(
-        class_name="CSC-332",
-        instructor="Zaid M.",
-        seat=20,
-        date="MonWe",
+        class_name=clas.class_name,
+        instructor=clas.instructor,
+        seat=clas.seat,
+        date=clas.date,
         time="11:00AM-12:30PM",
 
     )
@@ -214,6 +227,11 @@ def reject(id):
                   to_addrs=email,
                   msg=f"Subject: We are sorry to say you have been rejected!\n\nmaybe you can try applying for it in next semester.....")
 
+              student = Student.query.filter_by(user_id=id).first()
+              user =User.query.filter_by(id=id).first()
+              db.session.delete(user)
+              db.session.delete(student)
+              db.session.commit()
 
               return redirect(url_for('admin_home'))
       except Exception as e:
@@ -235,6 +253,10 @@ def accept(id):
                   to_addrs=email,
                   msg=f"Subject: Congrats you have been accepted!\n\nyay you made it awesome :).....")
 
+              student = Student.query.filter_by(user_id=id).first()
+              student.approved = True
+              db.session.commit()
+
 
               return redirect(url_for('admin_home'))
       except Exception as e:
@@ -245,11 +267,12 @@ def accept(id):
 
 @app.route("/create_class", methods=["POST", "GET"])
 def create_class():
+
     form = CreateClassForm()
     if form.validate_on_submit():
         new_class = Classes(
             class_name=form.class_name.data,
-            class_id=12342,
+            class_id=11342,
             instructor=form.instructor.data,
             date=form.date.data,
             seat=form.seat.data,

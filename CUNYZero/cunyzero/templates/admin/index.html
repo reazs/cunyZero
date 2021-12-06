@@ -58,7 +58,7 @@
       }
       .academic-card{
         padding: 20px 20px;
-         max-width: 300px;
+
          margin: 10px 0;
          box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
          border-radius: 10px;
@@ -140,37 +140,19 @@
 
     <br>  <h6 class="small-heading">Assigned Classes</h6>
  <div class="row">
-            <div class="col-lg-3 col-md-4">
+     {% for class in classes %}
+            <div class="col-lg-4 col-md-6 col-sm-8">
 
               <div class="academic-card">
-                   <p class="line-height"><strong>Class:</strong> CSC 335</p>
-                  <p class="line-height"><strong>Instructor:</strong> staff</p>
-                   <p class="line-height"><strong>seats:</strong> 24/29</p>
-                   <p class="line-height"><strong>status:</strong> open</p>
-                   <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
+                   <p class="line-height"><strong>Class:</strong> {{class.class_name}}</p>
+                  <p class="line-height"><strong>Instructor:</strong> {{class.instructor}}</p>
+                   <p class="line-height"><strong>seats:</strong> {{class.seat}}</p>
+                   <p class="line-height"><strong>date:</strong> {{class.date}}</p>
+                   <a href="{{url_for('class_edit', id=class.id)}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
               </div>
             </div>
 
-            <div class="col-lg-3 col-md-4">
-
-              <div class="academic-card">
-                  <p class="line-height"><strong>Class:</strong> CSC 335</p>
-                  <p class="line-height"><strong>Instructor:</strong> staff</p>
-                   <p class="line-height"><strong>seats:</strong> 24/29</p>
-                   <p class="line-height"><strong>status:</strong> open</p>
-                   <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
-              </div>
-            </div>
-             <div class="col-lg-3 col-md-4">
-
-              <div class="academic-card">
-                  <p class="line-height"><strong>Class:</strong> CSC 335</p>
-                  <p class="line-height"><strong>Instructor:</strong> staff</p>
-                   <p class="line-height"><strong>seats:</strong> 24/29</p>
-                   <p class="line-height"><strong>status:</strong> open</p>
-                   <a href="{{url_for('class_edit')}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
-              </div>
-            </div>
+        {% endfor %}
 
  </div>
 
@@ -199,15 +181,18 @@
   </thead>
   <tbody>
     {% for student in students %}
-    <tr>
-      <td>{{ student.f_name }}</td>
-      <td>{{ student.l_name }}</td>
-      <td>{{ student.gpa }}</td>
-      <td>
-        <a href="{{url_for('accept', id=student.user_id)}}" class="btn btn-outline-success">Accept</a>
-        <a href="{{url_for('reject', id=student.user_id)}}" class="btn btn-outline-danger">Reject</a>
-    </td>
+    {% if student.approved == 0 %}
+         <tr>
+          <td>{{ student.f_name }}</td>
+          <td>{{ student.l_name }}</td>
+          <td>{{ student.gpa }}</td>
+          <td>
+            <a href="{{url_for('accept', id=student.user_id)}}" class="btn btn-outline-success">Accept</a>
+            <a href="{{url_for('reject', id=student.user_id)}}" class="btn btn-outline-danger">Reject</a>
+        </td>
     </tr>
+    {% endif %}
+
   {% endfor %}
 
   </tbody>

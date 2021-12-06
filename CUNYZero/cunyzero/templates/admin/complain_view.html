@@ -30,7 +30,7 @@
          font-size: 1.2rem;
          font-family: 'Merriweather', serif;
       }
-      td.p-tag{
+      td p{
         margin: 0;
       }
 </style>
@@ -63,7 +63,7 @@
     <tr>
       <td> {{complain.complainer}} </td>
       <td> {{complain.complainTo}} </td>
-      <td class="p-tag">{{complain.issue}}</td>
+      <td >{{complain.issue | safe }}</td>
       <td>
         <a  class="btn btn-outline-success">Accept</a>
         <a class="btn btn-outline-danger">Denny</a>
