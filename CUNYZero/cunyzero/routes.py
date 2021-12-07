@@ -13,8 +13,6 @@ PASSWORD = "123National!"
 
 @app.route("/")
 def home():
-
-
     if current_user.is_authenticated:
         print(current_user.role)
     return render_template("home.html", courses=classes)

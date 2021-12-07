@@ -8,7 +8,6 @@ from cunyzero.models import User, Instructor
 from cunyzero import db
 
 
-instructors = [instructor.f_name+" "+ instructor.l_name for instructor in Instructor.query.all()]
 
 class StudentRegister(FlaskForm):
     f_name = StringField("First name", validators=[DataRequired(), AlphaSpace()])
@@ -61,7 +60,7 @@ class CreateClassForm(FlaskForm):
 
 
     class_name = StringField("Class", validators=[DataRequired()])
-    instructor = SelectField("Instructor Name", validators=[DataRequired()], choices=[name for name in instructors])
+    instructor = SelectField("Instructor Name", validators=[DataRequired()], choices=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()])
     seat = IntegerField("Total Amount Of Seats", validators=[DataRequired()])
     class_id = StringField("Class ID", validators=[DataRequired()])
     date = SelectField("Class Meeting Day", validators=[DataRequired()], choices=[
