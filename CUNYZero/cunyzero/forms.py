@@ -4,9 +4,11 @@ from wtforms.validators import DataRequired, Email, ValidationError, Length, Equ
 from wtforms_validators import AlphaSpace
 from flask_ckeditor import CKEditor, CKEditorField
 from cunyzero import app
-from cunyzero.models import User
+from cunyzero.models import User, Instructor
+from cunyzero import db
 
 
+instructors = [instructor.f_name+" "+ instructor.l_name for instructor in Instructor.query.all()]
 
 class StudentRegister(FlaskForm):
     f_name = StringField("First name", validators=[DataRequired(), AlphaSpace()])
@@ -59,8 +61,9 @@ class CreateClassForm(FlaskForm):
 
 
     class_name = StringField("Class", validators=[DataRequired()])
-    instructor = StringField("Instructor Name", validators=[DataRequired()], )
+    instructor = SelectField("Instructor Name", validators=[DataRequired()], choices=[name for name in instructors])
     seat = IntegerField("Total Amount Of Seats", validators=[DataRequired()])
+    class_id = StringField("Class ID", validators=[DataRequired()])
     date = SelectField("Class Meeting Day", validators=[DataRequired()], choices=[
         "MoWe", "TuTh", "MoFri", "Fri"
     ] )
@@ -71,6 +74,17 @@ class CreateClassForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+class ConfirmEnrollForm(FlaskForm):
+    submit = SubmitField("Confirm Enrollment")
+
+
 class TermForm(FlaskForm):
     term = SelectField("Term Status", validators=[DataRequired()], choices=["Set-Up", "Register", "Class Running", "Grading"])
     submit = SubmitField("Submit")
+
+
+class GradingForm(FlaskForm):
+    grade = FloatField("grade", validators=[DataRequired(), NumberRange(min=0,max=4)])
+    submit = SubmitField("update")
+
+db.create_all()

@@ -145,7 +145,7 @@
 
               <div class="academic-card">
                    <p class="line-height"><strong>Class:</strong> {{class.class_name}}</p>
-                  <p class="line-height"><strong>Instructor:</strong> {{class.instructor}}</p>
+                  <p class="line-height"><strong>Instructor:</strong> {{class.instructor_name}}</p>
                    <p class="line-height"><strong>seats:</strong> {{class.seat}}</p>
                    <p class="line-height"><strong>date:</strong> {{class.date}}</p>
                    <a href="{{url_for('class_edit', id=class.id)}}" class="btn btn-outline-danger">Edit <i class="far fa-edit"></i></a>
@@ -205,13 +205,8 @@
       <br>
 
     <h6 class="small-heading">New Instructors</h6>
-    {% if instructor is none: %}
-    <div class="no-class">
 
-        <h1>There is no New Instructor.</h1>
 
-    </div>
-    {% else: %}
       <table class="table table-striped">
   <thead>
     <tr>
@@ -224,6 +219,7 @@
 
 
     {% for instructor in instructors %}
+    {% if instructor.approved == 0 %}
     <tr>
       <td>{{ instructor.f_name }}</td>
       <td>{{ instructor.l_name }}</td>
@@ -232,8 +228,8 @@
         <a href="{{url_for('reject', id=instructor.user_id)}}" class="btn btn-outline-danger">Reject</a>
     </td>
     </tr>
+    {% endif %}
   {% endfor %}
-   {% endif %}
 
   </tbody>
 </table>

@@ -1,4 +1,5 @@
 {% include "login_signup/header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
 <!-- CSS only -->
@@ -59,7 +60,7 @@
     <div class="class-card">
           <div class="class-details">
               <p><strong>Class:</strong> {{clas.class_name}}</p>
-             <p><strong>Instructor:</strong> {{clas.instructor}}</p>
+             <p><strong>Instructor:</strong> {{clas.instructor_name}}</p>
              <p><strong>seats:</strong> {{clas.seat}}</p>
             <p><strong>status:</strong> {{clas.date}}</p>
           </div>
@@ -72,10 +73,7 @@
 
               </a>
                {% else: %}
-            <a href="{{  url_for('student_center')}}" class="btn btn-outline-primary">
-            Confirm Enrollment <i class="far fa-check-circle"></i>
-
-              </a>
+                {{ wtf.quick_form(form, button_map={"submit": "outline-primary"}) }}
                {% endif %}
             </div>
 </section>

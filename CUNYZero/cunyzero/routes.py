@@ -1,5 +1,5 @@
 from cunyzero import app, db, bcrypt
-from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, ComplaintForm, CreateClassForm, TermForm
+from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, GradingForm, ComplaintForm, CreateClassForm, TermForm, ConfirmEnrollForm
 from flask import render_template, redirect, url_for, flash
 from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor, Classes, Complain
@@ -9,10 +9,12 @@ import smtplib
 
 EMAIL = "johnweweno@gmail.com"
 PASSWORD = "123National!"
-TERM_STATUS = "Set-Up"
+
 
 @app.route("/")
 def home():
+
+
     if current_user.is_authenticated:
         print(current_user.role)
     return render_template("home.html", courses=classes)
@@ -25,6 +27,7 @@ def register_state():
 
 @app.route("/student_register", methods=["POST", "GET"])
 def student_register():
+
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = StudentRegister()
@@ -120,24 +123,58 @@ def instructor_index():
     if current_user.role == 'student':
         flash('Access Denied!', 'danger')
         return redirect(url_for('home'))
-    return render_template("instructor/instructor_index.html")
+    instructor_id = current_user.instructor.id
+    instructor = Instructor.query.filter_by(id=instructor_id).first()
+    classes = instructor.classes
+    return render_template("instructor/instructor_index.html", classes=classes, instructor_id=instructor_id)
 
 
-@app.route("/grading")
-def grading():
-    return render_template("instructor/grading.html")
+@app.route("/class_info<id>", methods=["POST", "GET"])
+def class_info(id):
+    form = GradingForm()
+
+    clas = Classes.query.filter_by(id=id).first()
+    students = clas.students
+    emails = []
+    for student in students:
+        user = User.query.filter_by(id=student.user_id).first()
+        email = user.email
+        emails.append(email)
+    print(emails)
+    return render_template("instructor/class_info.html", students=students, emails=emails, form=form)
 
 
 @app.route("/enrollment")
 def enrollment():
     classes = Classes.query.all()
-    return render_template("student/enrollment.html", status=TERM_STATUS, classes=classes)
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+    return render_template("student/enrollment.html", status=term_status, classes=classes)
 
 
 @app.route("/confirm_enroll<id>", methods=["GET", "POST"])
 def confirm_enroll(id):
+    form = ConfirmEnrollForm()
     clas = Classes.query.filter_by(id=id).first()
-    return render_template("student/confirm_enroll.html", clas=clas, term_stat=TERM_STATUS)
+
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+    if form.validate_on_submit():
+
+        if clas.seat <= 0:
+            return render_template("student/class_full.html")
+        else:
+            student_id = current_user.student.id
+            student = Student.query.filter_by(id=student_id).first()
+            student.class_count = student.class_count + 1
+            clas.students.append(student)
+            clas.seat = clas.seat - 1
+            db.session.commit()
+            return redirect(url_for("student_center"))
+
+    return render_template("student/confirm_enroll.html", clas=clas, term_stat=term_status, form=form)
 
 
 @app.route("/class_full")
@@ -148,10 +185,16 @@ def class_full():
 @app.route("/student_center")
 @login_required
 def student_center():
+
     if current_user.role == 'instructor':
         flash('Access Denied!', 'danger')
         return redirect(url_for('home'))
-    return render_template("student/student_center.html")
+    student_id = current_user.student.id
+    student = Student.query.filter_by(id=student_id).first()
+    print(student.id)
+    clas = student.classes
+
+    return render_template("student/student_center.html", classes=clas, student_id=student.id)
 
 
 @app.route("/student_details")
@@ -183,13 +226,19 @@ def complaint():
 
 @app.route("/registrar", methods=["GET", "POST"])
 def admin_home():
-    global TERM_STATUS
-    print(TERM_STATUS)
-    form = TermForm(term=TERM_STATUS)
+
+
+
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+    form = TermForm(term=term_status)
     students = Student.query.all()
     instructors = Instructor.query.all()
     classes = Classes.query.all()
     if form.validate_on_submit():
+        with open("term_status.txt", "w") as file:
+            file.write("term_status=" +form.term.data)
         TERM_STATUS = form.term.data
         return redirect(url_for("admin_home"))
     return render_template("admin/index.html", students=students, instructors=instructors, form=form, classes=classes)
@@ -202,7 +251,8 @@ def class_edit(id):
 
     form = CreateClassForm(
         class_name=clas.class_name,
-        instructor=clas.instructor,
+        instructor=clas.instructor_name,
+        class_id=clas.class_id,
         seat=clas.seat,
         date=clas.date,
         time="11:00AM-12:30PM",
@@ -245,6 +295,8 @@ def reject(id):
 
 @app.route("/accept/<id>")
 def accept(id):
+      user = User.query.filter_by(id=id).first()
+
       try:
           email = User.query.filter_by(id=id).first().email
           with smtplib.SMTP("smtp.gmail.com", 587) as connection:
@@ -254,9 +306,12 @@ def accept(id):
                   from_addr=EMAIL,
                   to_addrs=email,
                   msg=f"Subject: Congrats you have been accepted!\n\nyay you made it awesome :).....")
-
-              student = Student.query.filter_by(user_id=id).first()
-              student.approved = True
+              if (user.role == "student"):
+                  student = Student.query.filter_by(user_id=id).first()
+                  student.approved = True
+              else:
+                 instructor = Instructor.query.filter_by(user_id=id).first()
+                 instructor.approved = True
               db.session.commit()
 
 
@@ -274,14 +329,19 @@ def create_class():
     if form.validate_on_submit():
         new_class = Classes(
             class_name=form.class_name.data,
-            class_id=11342,
-            instructor=form.instructor.data,
+            class_id=form.class_id.data,
+            instructor_name=form.instructor.data,
             date=form.date.data,
             seat=form.seat.data,
+            time=form.time.data,
 
         )
+        name = form.instructor.data.split(" ")[0]
+        instructor = Instructor.query.filter_by(f_name=name).first()
+        new_class.instructors.append(instructor)
         db.session.add(new_class)
         db.session.commit()
+        return redirect(url_for("admin_home"))
 
     return render_template("admin/create_class.html", form=form)
 

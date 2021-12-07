@@ -93,33 +93,22 @@
 
       <div class="accademic-container">
          <div class="row">
+             {% for class in classes %}
+             {% if instructor_id == current_user.instructor.id %}
             <div class="col-lg-3 col-md-4">
 
-              <a type="button" href="{{url_for('grading')}}" class="academic-card">
-                   <h4><strong>Class:</strong> CSC 335</h4>
-                  <h4><strong>Instructor:</strong> staff</h4>
-                   <h4><strong>seats:</strong> 24/29</h4>
-                   <h4><strong>status:</strong> open</h4>
+              <a type="button" href="{{url_for('class_info', id=class.id) }}" class="academic-card">
+                   <h4><strong>Class:</strong> {{class.class_name}}</h4>
+                  <h4><strong>Time:</strong>{{class.time}}</h4>
+                   <h4><strong>Date:</strong>{{class.date}}</h4>
+                   <h4><strong>Seats:</strong>{{class.seat}}</h4>
               </a>
             </div>
+             {% endif %}
+             {% endfor %}
 
-            <div class="col-lg-3 col-md-4">
-              <a type="button" href="{{ url_for('grading') }}" class="academic-card">
-                  <h4><strong>Class:</strong> CSC 335</h4>
-                  <h4><strong>Instructor:</strong> staff</h4>
-                   <h4><strong>seats:</strong> 24/29</h4>
-                   <h4><strong>status:</strong> open</h4>
-              </a>
-            </div>
-            <div class="col-lg-3 col-md-4">
-              <a type="button" href="{{url_for('grading')}}" class="academic-card">
-                  <h4><strong>Class:</strong> CSC 335</h4>
-                  <h4><strong>Instructor:</strong> staff</h4>
-                   <h4><strong>seats:</strong> 24/29</h4>
-                   <h4><strong>status:</strong> open</h4>
 
-              </a>
-            </div>
+
          </div>
       </div>
       </center>

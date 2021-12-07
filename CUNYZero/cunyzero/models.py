@@ -28,6 +28,11 @@ enrollment = db.Table('enrollment',
     db.Column('class_id', db.Integer, db.ForeignKey('classes.id'))
 )
 
+assign_class = db.Table('assign_class',
+    db.Column('instructor_id', db.Integer, db.ForeignKey('instructor.id')),
+    db.Column('class_id', db.Integer, db.ForeignKey('classes.id'))
+)
+
 class Student(db.Model):
     __tablename__ = 'student'
     id = db.Column(db.Integer, primary_key=True)
@@ -40,7 +45,8 @@ class Student(db.Model):
     empl_id = db.Column(db.String(9), unique=True) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     classes = db.relationship("Classes", secondary=enrollment, backref=db.backref('students', lazy='dynamic'))
-   
+
+
 
 class Instructor(db.Model):
     __tablename__ = 'instructor'
@@ -49,6 +55,7 @@ class Instructor(db.Model):
     l_name = db.Column(db.String, nullable=False)
     approved = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    classes = db.relationship("Classes", secondary=assign_class, backref=db.backref('instructors', lazy='dynamic'))
 
 class Admin(db.Model):
     __tablename__ = 'admin'
@@ -62,10 +69,12 @@ class Classes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     class_name = db.Column(db.String, nullable=False)
     class_id = db.Column(db.Integer, unique=True, nullable=False)
-    instructor = db.Column(db.String, nullable=False)
+    instructor_name = db.Column(db.String, nullable=False)
     date = db.Column(db.String, nullable=False)
-    seat = db.Column(db.String, nullable=False)
+    seat = db.Column(db.Integer, nullable=False)
     student = db.relationship("Student", secondary=enrollment)
+    instructor = db.relationship("Instructor", secondary=assign_class)
+    time = db.Column(db.String, nullable=False)
 
 
 class Complain(db.Model):

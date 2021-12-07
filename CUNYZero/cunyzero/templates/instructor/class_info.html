@@ -1,5 +1,6 @@
 
 {% include "login_signup/header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
 <!-- CSS only -->
@@ -28,47 +29,53 @@
   <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">student ID</th>
+      <th scope="col">student Id</th>
       <th scope="col">First</th>
       <th scope="col">Last</th>
-      <th scope="col">email</th>
-      <th scope="col">grade</th>
-      <th scope="col">view</th>
+      <th scope="col">Grade</th>
+      <th scope="col"></th>
 
     </tr>
   </thead>
   <tbody>
+  {% for student in students %}
     <tr>
-      <th scope="row">132424</th>
-      <td>unknown</td>
-      <td>solid</td>
-      <td>solid@gmail.com</td>
-      <td> <p>none</p></td>
-      <td> <a href="{{url_for('student_details')}}">details</a></td>
+      <td>{{student.empl_id}}</td>
+      <td>{{student.f_name}}</td>
+      <td>{{student.l_name}}</td>
+       <form method="POST" action="">
+      <td>
+
+          {{ form.hidden_tag() }}
+          {{ form.grade }}
+
+      </td>
+
+         <td> {{form.submit(class="btn btn-outline-primary")}}</td>
+
+       </form>
+
+
     </tr>
-    <tr>
-      <th scope="row">435341</th>
-      <td>reaz</td>
-      <td>shakil</td>
-      <td>reaz@gmail.com</td>
-      <td> <p>none</p></td>
-      <td> <a href="{{url_for('student_details')}}">details</a></td>
-    </tr>
-    <tr>
-      <th scope="row">853241</th>
-      <td>student3</td>
-      <td>weweno</td>
-      <td>what@gmail.com</td>
-      <td> <p>none</p></td>
-      <td> <a href="{{url_for('student_details')}}">details</a></td>
-    </tr>
+  {% endfor %}
+<!--    <tr>-->
+<!--      <th scope="row">435341</th>-->
+<!--      <td>reaz</td>-->
+<!--      <td>shakil</td>-->
+<!--      <td>reaz@gmail.com</td>-->
+<!--      <td> <p>none</p></td>-->
+<!--      <td> <a href="{{url_for('student_details')}}">details</a></td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--      <th scope="row">853241</th>-->
+<!--      <td>student3</td>-->
+<!--      <td>weweno</td>-->
+<!--      <td>what@gmail.com</td>-->
+<!--      <td> <p>none</p></td>-->
+<!--      <td> <a href="{{url_for('student_details')}}">details</a></td>-->
+<!--    </tr>-->
   </tbody>
 </table>
-<div class="edit-btn">
-    <a class="btn btn-outline-dark">
-    Edit
-    <i class="fas fa-pen"></i>
-  </a>
-</div>
+
 
 </div>
