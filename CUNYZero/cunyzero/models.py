@@ -61,10 +61,10 @@ class Classes(db.Model):
     __tablename__ = 'classes'
     id = db.Column(db.Integer, primary_key=True)
     class_name = db.Column(db.String, nullable=False)
-    class_id = db.Column(db.Integer, unique=True, nullable=False)
+    class_id = db.Column(db.String, unique=True, nullable=False)
     instructor = db.Column(db.String, nullable=False)
     date = db.Column(db.String, nullable=False)
-    seat = db.Column(db.String, nullable=False)
+    seat = db.Column(db.Integer, nullable=False)
     student = db.relationship("Student", secondary=enrollment)
 
 

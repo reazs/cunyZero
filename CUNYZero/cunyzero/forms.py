@@ -56,6 +56,7 @@ class ComplaintForm(FlaskForm):
 class CreateClassForm(FlaskForm):
     class_name = StringField("Class", validators=[DataRequired()])
     instructor = StringField("Instructor Name", validators=[DataRequired()])
+    class_id = StringField("Class ID", validators=[DataRequired()])
     seat = IntegerField("Total Amount Of Seats", validators=[DataRequired()])
     date = SelectField("Class Meeting Day", validators=[DataRequired()], choices=[
         "MoWe", "TuTh", "MoFri", "Fri"
