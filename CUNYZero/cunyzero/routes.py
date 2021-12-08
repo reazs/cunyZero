@@ -16,9 +16,6 @@ PASSWORD = "123National!"
 @app.route("/")
 def home():
     insts=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
-    print(insts)
-    if current_user.is_authenticated:
-        print(current_user.role)
     return render_template("home.html", courses=classes)
 
 
@@ -161,7 +158,6 @@ def class_info(id):
                     course=stud_list[i],
                     is_graded=True,
                 )
-
                 db.session.add(new_course)
                 db.session.commit()
 
@@ -218,6 +214,13 @@ def class_full():
 def student_center():
 
     class_grades = CompletedCourse.query.filter_by(stud_id=current_user.student.user_id)
+    length = len(list(class_grades))
+    grade = 0
+    for classgrade in class_grades:
+        grade = grade + classgrade.grade
+        print('grade ', grade)
+    current_user.student.c_gpa = grade / length  
+    db.session.commit()
 
     with open("term_status.txt", "r") as file:
         data = file.read()
@@ -228,7 +231,6 @@ def student_center():
         return redirect(url_for('home'))
     student_id = current_user.student.id
     student = Student.query.filter_by(id=student_id).first()
-    print(student.id)
     clas = student.classes
 
     return render_template("student/student_center.html", classes=clas, student_id=student.id, status=term_status, grades=class_grades)
