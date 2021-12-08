@@ -75,7 +75,7 @@
    <section class="top-section">
 
          <br><br><br><br>
-       <h5 class="small-heading">Welcome Reaz</h5>
+       <h5 class="small-heading">Welcome {{current_user.student.f_name}}</h5>
 
        <div class="sized-box"></div>
 
@@ -120,7 +120,35 @@
         <div class="sized-box"></div>
         <div class="sized-box"></div>
 
-        
+
+       <div class="container">
+
+
+
+           <table class="table">
+
+  <thead>
+    <tr>
+
+      <th scope="col">Instructor</th>
+      <th scope="col">Class Name</th>
+      <th scope="col">Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for grade in grades %}
+
+    <tr>
+      <td>{{grade.instructor_name}}</td>
+      <td>{{grade.class_name}}</td>
+      <td>{{grade.grade}}</td>
+    </tr>
+
+  {% endfor %}
+
+  </tbody>
+</table>
+       </div>
 
     </section>
 

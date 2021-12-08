@@ -26,7 +26,7 @@
 </style>
 
 
- <form method="POST" action="">
+<!-- <form method="POST" action="">-->
 <div class="container">
   <table class="table table-striped">
   <thead>
@@ -34,9 +34,7 @@
       <th scope="col">student Id</th>
       <th scope="col">First</th>
       <th scope="col">Last</th>
-       {% if status == 'Grading' %}
-      <th scope="col">Grade</th>
-       {% endif %}
+
 <!--      <th scope="col"></th>-->
 
     </tr>
@@ -50,12 +48,6 @@
       <td>{{students[i].f_name}}</td>
       <td>{{students[i].l_name}}</td>
 
-      <td>
-        {% if status == 'Grading' %}
-        <input  type="number" step="0.1" min="0" max="4" name="{{i}}"  placeholder="Enter Grade">
-
-        {% endif %}
-      </td>
 
 <!--      <td>-->
 <!--        <a href="{{url_for('class_info', id=id)}}" class="btn btn-outline-primary">Update</a>-->
@@ -89,10 +81,11 @@
 <!--      <td> <a href="{{url_for('student_details')}}">details</a></td>-->
 <!--    </tr>-->
 </table>
-{% if status == 'Grading' %}
-  <button class="btn btn-lg btn-outline-primary" type="submit">submit</button>
-
-  {% endif %}
+<!--  {% if is_graded != 1 %}-->
+<!--  <button class="btn btn-lg btn-outline-primary" type="submit">submit</button>-->
+<!--  {% else %}-->
+<!--  <a href="{{url_for('admin_home')}}" class="btn btn-outline-primary">Edit Grade</a>-->
+<!--  {% endif %}-->
 
 </div>
- </form>
+<!-- </form>-->

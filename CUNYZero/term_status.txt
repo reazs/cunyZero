@@ -1,1 +1,1 @@
-term_status=Register
+term_status=Grading

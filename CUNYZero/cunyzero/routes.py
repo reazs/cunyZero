@@ -138,28 +138,40 @@ def class_info(id):
     is_graded = False
     students = clas.students
     course = CompletedCourse.query.all()
-
+    term_status = ""
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
 
     for student in students:
+
         stud_list.append(student)
 
         length = len(stud_list)
 
-        if request.method == "POST":
-            for i in range(length):
+    if request.method == "POST":
+        for i in range(length):
+            temp = CompletedCourse.query.filter_by(stud_id=stud_list[i].id).first()
+            if temp is None or temp.instructor_name != clas.instructor_name:
                 new_course = CompletedCourse(
                     instructor_name=clas.instructor_name,
-                    student_name=student.f_name+" " + student.l_name,
+                    student_name=stud_list[i].f_name+" " +stud_list[i].l_name,
                     grade=request.form.get(str(i)),
                     class_name=clas.class_name,
-                    course=student,
+                    course=stud_list[i],
                     is_graded=True,
                 )
+
                 db.session.add(new_course)
                 db.session.commit()
 
+        return redirect(url_for('instructor_index'))
 
-        return render_template("instructor/class_info.html", students=stud_list, length=length,)
+    return render_template("instructor/class_info.html", students=stud_list, length=length, status=term_status)
+
+
+
+
 
 
 @app.route("/enrollment")
@@ -205,6 +217,12 @@ def class_full():
 @login_required
 def student_center():
 
+    class_grades = CompletedCourse.query.filter_by(stud_id=current_user.student.user_id)
+
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+
     if current_user.role == 'instructor':
         flash('Access Denied!', 'danger')
         return redirect(url_for('home'))
@@ -213,7 +231,7 @@ def student_center():
     print(student.id)
     clas = student.classes
 
-    return render_template("student/student_center.html", classes=clas, student_id=student.id)
+    return render_template("student/student_center.html", classes=clas, student_id=student.id, status=term_status, grades=class_grades)
 
 
 @app.route("/student_details")
