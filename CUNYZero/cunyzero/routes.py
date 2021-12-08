@@ -1,9 +1,11 @@
 from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, GradingForm, ComplaintForm, CreateClassForm, TermForm, ConfirmEnrollForm
-from flask import render_template, redirect, url_for, flash
+
+from flask import render_template, redirect, url_for, flash, request
 from cunyzero.schedule import classes
-from cunyzero.models import User, Student, Instructor, Classes, Complain
+from cunyzero.models import User, Student, Instructor, Classes, Complain, CompletedCourse
 from flask_login import login_user, current_user, logout_user, login_required
+import json
 
 import smtplib
 
@@ -13,6 +15,8 @@ PASSWORD = "123National!"
 
 @app.route("/")
 def home():
+    insts=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
+    print(insts)
     if current_user.is_authenticated:
         print(current_user.role)
     return render_template("home.html", courses=classes)
@@ -129,22 +133,39 @@ def instructor_index():
 
 @app.route("/class_info<id>", methods=["POST", "GET"])
 def class_info(id):
-    form = GradingForm()
-
     clas = Classes.query.filter_by(id=id).first()
+    stud_list = []
+    is_graded = False
     students = clas.students
-    emails = []
+    course = CompletedCourse.query.all()
+
+
     for student in students:
-        user = User.query.filter_by(id=student.user_id).first()
-        email = user.email
-        emails.append(email)
-    print(emails)
-    return render_template("instructor/class_info.html", students=students, emails=emails, form=form)
+        stud_list.append(student)
+
+        length = len(stud_list)
+
+        if request.method == "POST":
+            for i in range(length):
+                new_course = CompletedCourse(
+                    instructor_name=clas.instructor_name,
+                    student_name=student.f_name+" " + student.l_name,
+                    grade=request.form.get(str(i)),
+                    class_name=clas.class_name,
+                    course=student,
+                    is_graded=True,
+                )
+                db.session.add(new_course)
+                db.session.commit()
+
+
+        return render_template("instructor/class_info.html", students=stud_list, length=length,)
 
 
 @app.route("/enrollment")
 def enrollment():
     classes = Classes.query.all()
+
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]

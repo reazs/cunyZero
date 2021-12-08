@@ -45,7 +45,7 @@ class Student(db.Model):
     empl_id = db.Column(db.String(9), unique=True) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     classes = db.relationship("Classes", secondary=enrollment, backref=db.backref('students', lazy='dynamic'))
-
+    completed_course = db.relationship("CompletedCourse", backref="course", lazy=True)
 
 
 class Instructor(db.Model):
@@ -82,5 +82,17 @@ class Complain(db.Model):
     complainer = db.Column(db.String, nullable=False)
     complainTo = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
+
+
+class CompletedCourse(db.Model):
+    __tablename__="completedCourse"
+    id = db.Column(db.Integer, primary_key=True)
+    instructor_name = db.Column(db.String, nullable=False)
+    student_name = db.Column(db.String, nullable=False)
+    grade = db.Column(db.Integer, nullable=False)
+    class_name = db.Column(db.String, nullable=False)
+    stud_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    is_graded = db.Column(db.Boolean, default=False)
+
 
 db.create_all()

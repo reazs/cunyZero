@@ -1,6 +1,6 @@
 
 {% include "login_signup/header.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
 <!-- CSS only -->
@@ -25,6 +25,8 @@
   color: white;
 </style>
 
+
+ <form method="POST" action="">
 <div class="container">
   <table class="table table-striped">
   <thead>
@@ -32,32 +34,44 @@
       <th scope="col">student Id</th>
       <th scope="col">First</th>
       <th scope="col">Last</th>
+       {% if is_graded != 1 %}
       <th scope="col">Grade</th>
-      <th scope="col"></th>
+       {% endif %}
+<!--      <th scope="col"></th>-->
 
     </tr>
   </thead>
+
+
   <tbody>
-  {% for student in students %}
+  {% for i in range(length) %}
     <tr>
-      <td>{{student.empl_id}}</td>
-      <td>{{student.f_name}}</td>
-      <td>{{student.l_name}}</td>
-       <form method="POST" action="">
+      <td>{{students[i].empl_id}}</td>
+      <td>{{students[i].f_name}}</td>
+      <td>{{students[i].l_name}}</td>
+
       <td>
+<!--        {% if is_graded != 1 %}-->
+        <input  type="number" step="0.1" min="0" max="4" name="{{i}}"  placeholder="Enter Grade">
 
-          {{ form.hidden_tag() }}
-          {{ form.grade }}
-
+<!--        {% endif %}-->
       </td>
 
-         <td> {{form.submit(class="btn btn-outline-primary")}}</td>
+<!--      <td>-->
+<!--        <a href="{{url_for('class_info', id=id)}}" class="btn btn-outline-primary">Update</a>-->
+<!--      </td>-->
 
-       </form>
+
 
 
     </tr>
-  {% endfor %}
+
+    {% endfor %}
+  </tbody>
+
+
+
+
 <!--    <tr>-->
 <!--      <th scope="row">435341</th>-->
 <!--      <td>reaz</td>-->
@@ -74,8 +88,12 @@
 <!--      <td> <p>none</p></td>-->
 <!--      <td> <a href="{{url_for('student_details')}}">details</a></td>-->
 <!--    </tr>-->
-  </tbody>
 </table>
-
+<!--  {% if is_graded != 1 %}-->
+  <button class="btn btn-lg btn-outline-primary" type="submit">submit</button>
+<!--  {% else %}-->
+<!--  <a href="{{url_for('admin_home')}}" class="btn btn-outline-primary">Edit Grade</a>-->
+<!--  {% endif %}-->
 
 </div>
+ </form>
