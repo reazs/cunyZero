@@ -30,7 +30,7 @@
          margin-bottom: 40px;
       }
       .academic-card{
-         height: 200px;
+
          max-width: 300px;
          margin: 10px 0;
          box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
@@ -54,17 +54,25 @@
          font-family: 'Merriweather', serif;
       }
 
+
          .academic-card{
 
     text-align: left;
     padding: 20px 40px;
     text-decoration: none;
     color: black;
+
     }
 
     .academic-card:hover{
         text-decoration: none;
         color: black;
+    }
+
+
+    .line-height{
+
+        line-height: 1;
     }
 
 
@@ -84,18 +92,16 @@
 
       <center>
           
-       <div class="accademic-container">
          <div class="row">
              {% for class in classes : %}
              {% if student_id == current_user.student.id %}
-            <div class="col-lg-3 col-md-4">
+             <div class="col-lg-4 col-md-6 col-sm-8">
 
-              <a type="button" href="{{url_for('class_details', id=class.id)}}" class="academic-card">
-                   <h4><strong>Class:</strong> {{class.class_name}}</h4>
-                  <h4><strong>Instructor:</strong> {{class.instructor_name}}</h4>
-                  <h4><strong>Date:</strong> {{class.date}}</h4>
-                  <h4><strong>Time:</strong> {{class.time}}</h4>
-
+                  <a type="button" href="{{url_for('class_details', id=class.id)}}" class="academic-card">
+                   <p class="line-height"><strong>Class:</strong> {{class.class_name}}</p>
+                  <p class="line-height"><strong>Instructor:</strong> {{class.instructor_name}}</p>
+                   <p class="line-height"><strong>Time:</strong> {{class.time}}</p>
+                   <p class="line-height"><strong>date:</strong> {{class.date}}</p>
 
               </a>
             </div>
@@ -104,7 +110,6 @@
 
 
          </div>
-      </div>
         </center>
 
 
@@ -143,7 +148,12 @@
     <tr>
       <td>{{grade.instructor_name}}</td>
       <td>{{grade.class_name}}</td>
-      <td>{{grade.grade}}</td>
+      {% if grade.grade == 0 %}
+      <td>W</td>
+        {% else %}
+        <td>{{grade.grade}}</td>
+        {% endif %}
+
     </tr>
 
   {% endfor %}

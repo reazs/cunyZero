@@ -1,1 +1,1 @@
-term_status=Class Running
+term_status=Register

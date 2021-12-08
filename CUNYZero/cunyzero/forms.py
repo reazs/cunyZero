@@ -77,6 +77,9 @@ class ConfirmEnrollForm(FlaskForm):
     submit = SubmitField("Confirm Enrollment")
 
 
+class DropClassForm(FlaskForm):
+    submit = SubmitField("Drop Class")
+
 class TermForm(FlaskForm):
     term = SelectField("Term Status", validators=[DataRequired()], choices=["Set-Up", "Register", "Class Running", "Grading"])
     submit = SubmitField("Submit")

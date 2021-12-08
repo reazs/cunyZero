@@ -58,8 +58,16 @@
   {% if status=="Grading" %}
   <div class="edit-btn">
     <a href="{{  url_for('review')}}" class="btn btn-outline-success">
-    Review
+    Give Review
         <i class="far fa-star"></i>
+      </a>
+    </div>
+  {% endif %}
+    {% if status=="Class Running" or status=="Register"  %}
+  <div class="edit-btn">
+    <a href="{{  url_for('drop_class', id=clas.id)}}" class="btn btn-outline-danger">
+    Drop Class
+        <i class="far fa-trash-alt"></i>
       </a>
     </div>
   {% endif %}

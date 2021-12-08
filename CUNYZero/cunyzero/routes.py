@@ -1,10 +1,11 @@
 from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, GradingForm, ComplaintForm, CreateClassForm, TermForm, ConfirmEnrollForm
 from sqlalchemy import desc
-from cunyzero.forms import ReviewForm
+from cunyzero.forms import ReviewForm, DropClassForm
 from flask import render_template, redirect, url_for, flash, request
 from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor, Classes, Complain, CompletedCourse
+from cunyzero.models import enrollment as enroll_
 from flask_login import login_user, current_user, logout_user, login_required
 import json
 import random
@@ -19,6 +20,7 @@ def home():
 
 
     clases = Classes.query.all()
+    db.session.commit()
     students = Student.query.order_by(desc(Student.c_gpa)).limit(5)
     insts=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
     return render_template("home.html", courses=clases, students=students)
@@ -222,10 +224,14 @@ def student_center():
     grade = 0
     if length != 0:
         for classgrade in class_grades:
-            grade = grade + classgrade.grade
+
+            if classgrade.grade == 0:
+                pass
+            else:
+                grade = grade + classgrade.grade
             print('grade ', grade)
-        current_user.student.c_gpa = grade / length
-        db.session.commit()
+            current_user.student.c_gpa = grade / length
+            db.session.commit()
 
     with open("term_status.txt", "r") as file:
         data = file.read()
@@ -258,7 +264,7 @@ def class_details(id):
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
-    return render_template("student/class_details.html", status=term_status, students=students)
+    return render_template("student/class_details.html", status=term_status, students=students, clas=clas)
 
 
 @app.route("/complaint", methods=["POST", "GET"])
@@ -421,10 +427,42 @@ def review():
     form = ReviewForm()
     return render_template("student/review.html", form=form)
 
-# TODO create new db table for review we have to do honor roll DROPCLASS GRADUATION, WARNING DEMO
+# TODO create new db table for review we have to do honor roll  GRADUATION, WARNING DEMO
 # TODO Class CANCEL
 # TODO REVIEW CHECKING
 @app.route("/view_review", methods=["POST", "GET"])
 def view_review():
 
     return render_template("admin/view_review.html")
+
+
+@app.route("/drop_calss<id>", methods=["GET", "POST"])
+def drop_class(id):
+    form = DropClassForm()
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+    clas = Classes.query.filter_by(id=id).first()
+
+    if form.validate_on_submit():
+        completeCourse = CompletedCourse(class_name=clas.class_name,
+                                         course=current_user.student,
+                                         grade=0,
+                                         is_graded=True,
+                                         instructor_name=clas.instructor_name,
+                                         student_name=current_user.student.f_name+" "+current_user.student.l_name)
+        db.session.add(completeCourse)
+        student = current_user.student
+        if term_status == "Register":
+            clas.seat = clas.seat + 1
+
+        student.classes.remove(clas)
+
+        # enroll_.query.filter(enroll_.student_id == student_id, class_id=clas.id).delete()
+        # student.enrollment.remove(student_id=student_id)
+        db.session.commit()
+        return redirect(url_for('student_center'))
+
+    return render_template("student/drop_class.html", clas=clas, status=term_status, form=form)
+
+
