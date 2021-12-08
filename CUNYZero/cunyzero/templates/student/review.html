@@ -1,0 +1,32 @@
+{%import "bootstrap/wtf.html" as wtf %}
+{% include "login_signup/header.html" %}
+
+ <!-- Page Header -->
+ <link rel="stylesheet" href="static/register_login.css">
+<header class="masthead" style="background-image: url('https://images.theconversation.com/files/286560/original/file-20190801-169706-htdqem.jpg?ixlib=rb-1.1.0&rect=0%2C269%2C6000%2C3000&q=45&auto=format&w=668&h=324&fit=crop')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>Review</h1>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+
+    <div class="Container">
+        <div class="row">
+            <div class="col-lg-8 col-mnd-10 mx-auto">
+                {{ ckeditor.load() }}
+                {{wtf.quick_form(form, button_map={"submit": "danger"})}}
+            </div>
+        </div>
+    </div>
+
+
+

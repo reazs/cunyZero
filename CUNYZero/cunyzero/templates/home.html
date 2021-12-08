@@ -48,7 +48,7 @@
 
                 <br><br><br><br>
                 
-                    <a href="" class="btn btn-primary btn-lg btn-block">Apply Now</a>
+                    <a href="{{url_for('student_register')}}" class="btn btn-primary btn-lg btn-block">Apply Now</a>
                 
             
                     <section class="course-container">
@@ -62,16 +62,16 @@
                     
                         {% for course in courses: %}
 
-                            <div class="col-lg-2 course-card col-md-5">
+                            <div class="col-lg-4 course-card col-md-5">
                                 <h3 class="medium-heading">
-                                  {{ course["class_name"] }}
+                                  {{ course.class_name }}
                                 </h3>
-                                <h6>instructor: {{course["instructor"]}}</h6>
-                                <h6>seats: {{course["seat"]}}</h6>
+                                <h6>instructor: {{course.instructor_name}}</h6>
+                                <h6>seats: {{course.seat}}</h6>
                                 <div>
-                                    <span>Mon-Wed: {{course["time"] }}</span>
+                                    <span>Mon-Wed: {{course.date }}</span>
                                 </div>
-                                <span>status: {{course['status']}}</span>
+                                <span>status: {{course.time}}</span>
                             </div>
 <!--                             
                             <div class="col-lg-2"></div>
@@ -80,7 +80,43 @@
                         {% endfor %}
 
                         </div>
-                
+
+                            <div style="height: 100px;"></div>
+
+                            <div>
+                                <h1 class="big-heading">Top Students</h1>
+                                <br>
+                                <hr style="width: 15%;">
+                            </div>
+
+                       <div class="container">
+                            <table class="table table-hover">
+
+                          <thead>
+                            <tr>
+
+                              <th scope="col">Instructor</th>
+                              <th scope="col">Class Name</th>
+                              <th scope="col">Grade</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for student in students %}
+
+                            <tr>
+                              <td>{{student.f_name}}</td>
+                              <td>{{student.l_name}}</td>
+                              <td>{{student.c_gpa}}</td>
+                            </tr>
+
+                          {% endfor %}
+
+                          </tbody>
+                        </table>
+                       </div>
+
+
+
                     </section>
 
 

@@ -76,7 +76,8 @@
 
          <br><br><br><br>
        <h5 class="small-heading">Welcome {{current_user.student.f_name}}</h5>
-
+       <h5 class="small-heading"><strong>Emplid:</strong> {{current_user.student.empl_id}}</h5>
+       <h5 class="small-heading"><strong>GPA:</strong> {{current_user.student.c_gpa}}</h5>
        <div class="sized-box"></div>
 
        <h6 class="small-heading">Academics</h6>
@@ -89,7 +90,7 @@
              {% if student_id == current_user.student.id %}
             <div class="col-lg-3 col-md-4">
 
-              <a type="button" href="{{url_for('class_details')}}" class="academic-card">
+              <a type="button" href="{{url_for('class_details', id=class.id)}}" class="academic-card">
                    <h4><strong>Class:</strong> {{class.class_name}}</h4>
                   <h4><strong>Instructor:</strong> {{class.instructor_name}}</h4>
                   <h4><strong>Date:</strong> {{class.date}}</h4>
@@ -120,6 +121,7 @@
         <div class="sized-box"></div>
         <div class="sized-box"></div>
 
+<h6 class="small-heading">class grades</h6>
 
        <div class="container">
 

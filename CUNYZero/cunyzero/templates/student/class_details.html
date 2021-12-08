@@ -28,31 +28,23 @@
   <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">email</th>
+      <th scope="col">Student ID</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
 
 
     </tr>
   </thead>
   <tbody>
+  {% for student in students %}
     <tr>
-      <td>unknown</td>
-      <td>solid</td>
-      <td>solid@gmail.com</td>
-    </tr>
-    <tr>
-      <td>reaz</td>
-      <td>shakil</td>
-      <td>reaz@gmail.com</td>
+      <td>{{student.empl_id}}</td>
+      <td>{{student.f_name}}</td>
+      <td>{{student.l_name}}</td>
 
     </tr>
-    <tr>
-      <td>student3</td>
-      <td>weweno</td>
-      <td>what@gmail.com</td>
+  {% endfor %}
 
-    </tr>
   </tbody>
 </table>
 
@@ -62,6 +54,15 @@
         <i class="fas fa-pen"></i>
       </a>
     </div>
+  <br>
+  {% if status=="Grading" %}
+  <div class="edit-btn">
+    <a href="{{  url_for('review')}}" class="btn btn-outline-success">
+    Review
+        <i class="far fa-star"></i>
+      </a>
+    </div>
+  {% endif %}
 
 
 </div>

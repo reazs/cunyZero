@@ -60,7 +60,7 @@ class CreateClassForm(FlaskForm):
 
 
     class_name = StringField("Class", validators=[DataRequired()])
-    instructor = SelectField("Instructor Name", validators=[DataRequired()], choices=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()])
+    instructor = SelectField("Instructor Name", validators=[DataRequired()])
     seat = IntegerField("Total Amount Of Seats", validators=[DataRequired()])
     class_id = StringField("Class ID", validators=[DataRequired()])
     date = SelectField("Class Meeting Day", validators=[DataRequired()], choices=[
@@ -85,5 +85,11 @@ class TermForm(FlaskForm):
 class GradingForm(FlaskForm):
     grade = FloatField("grade", validators=[DataRequired(), NumberRange(min=0,max=4)])
     submit = SubmitField("update")
+
+class ReviewForm(FlaskForm):
+    rating = SelectField("Rating", validators=[DataRequired()], choices=["★", "★★", "★★★", "★★★★", "★★★★★"][::-1])
+    description = CKEditorField("Description", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
 
 db.create_all()

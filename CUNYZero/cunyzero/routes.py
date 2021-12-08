@@ -1,12 +1,13 @@
 from cunyzero import app, db, bcrypt
 from cunyzero.forms import StudentRegister, StaffRegister, LoginForm, GradingForm, ComplaintForm, CreateClassForm, TermForm, ConfirmEnrollForm
-
+from sqlalchemy import desc
+from cunyzero.forms import ReviewForm
 from flask import render_template, redirect, url_for, flash, request
 from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor, Classes, Complain, CompletedCourse
 from flask_login import login_user, current_user, logout_user, login_required
 import json
-
+import random
 import smtplib
 
 EMAIL = "johnweweno@gmail.com"
@@ -15,8 +16,12 @@ PASSWORD = "123National!"
 
 @app.route("/")
 def home():
+
+
+    clases = Classes.query.all()
+    students = Student.query.order_by(desc(Student.c_gpa)).limit(5)
     insts=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
-    return render_template("home.html", courses=classes)
+    return render_template("home.html", courses=clases, students=students)
 
 
 @app.route("/register_state", methods=["POST", "GET"])
@@ -144,8 +149,7 @@ def class_info(id):
 
         stud_list.append(student)
 
-        length = len(stud_list)
-
+    length = len(stud_list)
     if request.method == "POST":
         for i in range(length):
             temp = CompletedCourse.query.filter_by(stud_id=stud_list[i].id).first()
@@ -213,14 +217,15 @@ def class_full():
 @login_required
 def student_center():
 
-    class_grades = CompletedCourse.query.filter_by(stud_id=current_user.student.user_id)
+    class_grades = CompletedCourse.query.filter_by(stud_id=current_user.student.id)
     length = len(list(class_grades))
     grade = 0
-    for classgrade in class_grades:
-        grade = grade + classgrade.grade
-        print('grade ', grade)
-    current_user.student.c_gpa = grade / length  
-    db.session.commit()
+    if length != 0:
+        for classgrade in class_grades:
+            grade = grade + classgrade.grade
+            print('grade ', grade)
+        current_user.student.c_gpa = grade / length
+        db.session.commit()
 
     with open("term_status.txt", "r") as file:
         data = file.read()
@@ -241,15 +246,25 @@ def student_details():
     return render_template("instructor/details.html")
 
 
-@app.route("/class_details")
-def class_details():
-    return render_template("student/class_details.html")
+@app.route("/class_details<id>", methods=["POST", "GET"])
+def class_details(id):
+    clas = Classes.query.filter_by(id=id).first()
+    stud_list = []
+    is_graded = False
+    students = clas.students
+    course = CompletedCourse.query.all()
+    term_status = ""
+
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+    return render_template("student/class_details.html", status=term_status, students=students)
 
 
 @app.route("/complaint", methods=["POST", "GET"])
 def complaint():
     form = ComplaintForm()
-    student = Student.query.filter_by(id=current_user.id).first()
+    student = Student.query.filter_by(id=current_user.student.id).first()
     complainer = student.f_name + " "+ student.l_name
     if form.validate_on_submit():
         new_complain = Complain(
@@ -297,6 +312,7 @@ def class_edit(id):
         time="11:00AM-12:30PM",
 
     )
+    form.instructor.choices = [instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
     return render_template("admin/class_edit.html", form=form)
 
 
@@ -346,7 +362,9 @@ def accept(id):
                   to_addrs=email,
                   msg=f"Subject: Congrats you have been accepted!\n\nyay you made it awesome :).....")
               if (user.role == "student"):
+                  empl_id = int(random.random() * 1000000000)
                   student = Student.query.filter_by(user_id=id).first()
+                  student.empl_id = empl_id
                   student.approved = True
               else:
                  instructor = Instructor.query.filter_by(user_id=id).first()
@@ -365,6 +383,7 @@ def accept(id):
 def create_class():
 
     form = CreateClassForm()
+    form.instructor.choices=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
     if form.validate_on_submit():
         new_class = Classes(
             class_name=form.class_name.data,
@@ -373,6 +392,7 @@ def create_class():
             date=form.date.data,
             seat=form.seat.data,
             time=form.time.data,
+
 
         )
         name = form.instructor.data.split(" ")[0]
@@ -394,3 +414,17 @@ def view_complaint():
 @app.route("/running_period")
 def running_period():
     return render_template("student/running_period.html")
+
+
+@app.route("/review", methods=["POST", "GET"])
+def review():
+    form = ReviewForm()
+    return render_template("student/review.html", form=form)
+
+# TODO create new db table for review we have to do honor roll DROPCLASS GRADUATION, WARNING DEMO
+# TODO Class CANCEL
+# TODO REVIEW CHECKING
+@app.route("/view_review", methods=["POST", "GET"])
+def view_review():
+
+    return render_template("admin/view_review.html")
