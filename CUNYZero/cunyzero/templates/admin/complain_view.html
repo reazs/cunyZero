@@ -66,8 +66,8 @@
       <td >{{complain.issue | safe }}</td>
       <td>
         <div class="row">
-            <a  class="btn btn-outline-success">Accept</a>
-        <a class="btn btn-outline-danger">Denny</a>
+            <a href="{{url_for('warning_accept', id=complain.id)}}"  class="col-sm-4 btn btn-outline-success">Accept</a>
+        <a href="{{url_for('deny_warning',id=complain.id)}}" class=" col-sm-4 btn btn-outline-danger">Deny</a>
         </div>
     </td>
     </tr>

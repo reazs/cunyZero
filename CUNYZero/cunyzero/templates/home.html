@@ -27,7 +27,8 @@
     </div>
   </header>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
+<center>
+      {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages%}
                 <div class="alert alert-{{ category }}" >
@@ -36,6 +37,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+</center>
    <section>
 
         <div class="middle-container">
@@ -102,6 +104,7 @@
                           </thead>
                           <tbody>
                           {% for student in students %}
+
 
                             <tr>
                               <td>{{student.f_name}}</td>

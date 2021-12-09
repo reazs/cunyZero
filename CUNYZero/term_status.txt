@@ -1,1 +1,1 @@
-term_status=End Semester
+term_status=Set-Up

@@ -7,9 +7,13 @@ from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor, Classes, Complain, CompletedCourse
 from cunyzero.models import Review, Graduation, Admin
 from flask_login import login_user, current_user, logout_user, login_required
+from better_profanity import profanity
 import json
 import random
 import smtplib
+
+
+
 
 EMAIL = "johnweweno@gmail.com"
 PASSWORD = "123National!"
@@ -49,7 +53,7 @@ def student_register():
     form = StudentRegister()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user1 = User(email=form.email.data, password=hashed_password, role='student')
+        user1 = User(email=form.email.data.lower(), password=hashed_password, role='student')
         student1 = Student(f_name=form.f_name.data, l_name=form.l_name.data, gpa=form.gpa.data, user=user1)
         db.session.add(user1)
         db.session.add(student1)
@@ -66,7 +70,7 @@ def staff_register():
     form = StaffRegister()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user1 = User(email=form.email.data, password=hashed_password, role='instructor')
+        user1 = User(email=form.email.data.lower(), password=hashed_password, role='instructor')
         instructor1 = Instructor(f_name=form.f_name.data, l_name=form.l_name.data, user=user1)
         db.session.add(user1)
         db.session.add(instructor1)
@@ -83,13 +87,14 @@ def student_login():
     form = LoginForm()
     if form.validate_on_submit():
 
-
-
-
-        user1 = User.query.filter_by(email=form.email.data).first()
-        if user1 and user1.password == PASSWORD:
-            login_user(user1)
-            return redirect(url_for('admin_home'))
+        user1 = User.query.filter_by(email=form.email.data.lower()).first()
+        if user1:
+            if form.password.data == PASSWORD:
+                login_user(user1)
+                return redirect(url_for('admin_home'))
+            elif user1.role == "admin":
+                flash('Login unsuccessfull! Check your email and/or password', 'danger')
+                return redirect(url_for('student_login'))
 
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'student':
             login_user(user1, remember=form.remember.data)
@@ -110,10 +115,16 @@ def instructor_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user1 = User.query.filter_by(email=form.email.data).first()
-        if user1 and user1.password == PASSWORD:
-            login_user(user1)
-            return redirect(url_for('admin_home'))
+
+        user1 = User.query.filter_by(email=form.email.data.lower()).first()
+        if user1:
+            if form.password.data == PASSWORD:
+                login_user(user1)
+                return redirect(url_for('admin_home'))
+            elif user1.role == "admin":
+                flash('Login unsuccessfull! Check your email and/or password', 'danger')
+                return redirect(url_for('instructor_login'))
+
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
             login_user(user1, remember=form.remember.data)
             new_instructor = Instructor.query.filter_by(user_id=user1.id).first()
@@ -189,6 +200,10 @@ def class_info(id):
                     course=stud_list[i],
                     is_graded=True,
                 )
+                if request.form.get(str(i)) == 0:
+                    instructor = Instructor.query.filter_by(f_name=clas.instructor_name.split(" ")[0]).first()
+                    instructor.warnings += 1
+
                 db.session.add(new_course)
                 db.session.commit()
 
@@ -284,7 +299,6 @@ def student_center():
                 pass
             else:
                 grade = grade + classgrade.grade
-            print('grade ', grade)
             current_user.student.c_gpa = grade / length
             db.session.commit()
 
@@ -333,21 +347,27 @@ def class_details(id):
 @app.route("/complaint", methods=["POST", "GET"])
 @login_required
 def complaint():
-    if current_user.role == "instructor":
-        flash('Access Denied!', 'danger')
-        return redirect(url_for('home'))
+    dir_ = ""
     form = ComplaintForm()
-    student = Student.query.filter_by(id=current_user.student.id).first()
-    complainer = student.f_name + " "+ student.l_name
+    if current_user.role == "student":
+        dir_ = "student_center"
+        user = Student.query.filter_by(id=current_user.student.id).first()
+    else:
+        dir_ = "instructor_index"
+        user = Instructor.query.filter_by(id=current_user.instructor.id).first()
+    complainer = user.f_name + " " + user.l_name
     if form.validate_on_submit():
+        issue_filter = profanity.censor(form.issue.data)
         new_complain = Complain(
             complainer=complainer,
             complainTo=form.complainFor.data,
-            issue=form.issue.data,
+            issue=issue_filter,
         )
         db.session.add(new_complain)
         db.session.commit()
-        return redirect("student_center")
+        return redirect(dir_)
+
+
     return render_template("student/complaint.html", form=form)
 
 
@@ -360,6 +380,7 @@ def admin_home():
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
+
     form = TermForm(term=term_status)
     students = Student.query.all()
     instructors = Instructor.query.all()
@@ -368,19 +389,28 @@ def admin_home():
     if form.validate_on_submit():
         with open("term_status.txt", "w") as file:
             file.write("term_status=" +form.term.data)
-        TERM_STATUS = form.term.data
+        term_status = form.term.data
+        if term_status == "Class Running":
+            for clas in classes:
+                student = clas.student
+                stud_list = list(student)
+                length = len(stud_list)
+                if length < 5:
+                    insts = clas.instructors
+                    studs = clas.students
+                    for instructor in insts:
+                        instructor.classes.remove(clas)
+                        db.session.commit()
+                    for student in studs:
+                        student.classes.remove(clas)
+                        db.session.commit()
+                    db.session.delete(clas)
+                    db.session.commit()
+
         if term_status == "End Semester":
             return redirect(url_for('end_semester'))
-        # if term_status == "Class Running":
-        #     cancel_classes = []
-        #     for clas in classes:
-        #         student = clas.student
-        #         length=len(list(student))
-        #
-        #         if length<2: # TODO change this value after debuging
-        #             cancel_classes.append(clas)
-        #
-        #             return redirect(url_for('cancel_class'))
+
+
 
         return redirect(url_for("admin_home"))
     return render_template("admin/index.html", students=students, instructors=instructors, form=form, classes=classes, status=term_status)
@@ -405,6 +435,23 @@ def class_edit(id):
 
     )
     form.instructor.choices = [instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
+    old_name = clas.instructor_name.split(" ")[0]
+    if form.validate_on_submit():
+        clas.class_name = form.class_name.data
+        clas.instructor_name = form.instructor.data
+        clas.class_id = form.class_id.data
+        clas.seat = form.seat.data
+        clas.date = form.date.data
+        clas.time = form.time.data
+        name = form.instructor.data.split(" ")[0]
+        instructor = Instructor.query.filter_by(f_name=name).first()
+        clas.instructors.append(instructor)
+        instructor_remove = Instructor.query.filter_by(f_name=old_name).first()
+        clas.instructors.remove(instructor_remove)
+        db.session.commit()
+        return redirect (url_for('admin_home'))
+
+
     return render_template("admin/class_edit.html", form=form)
 
 
@@ -536,9 +583,10 @@ def review(id):
     clas = Classes.query.filter_by(id=id).first()
     form = ReviewForm()
     if form.validate_on_submit():
+        description = profanity.censor(form.description.data)
         new_review = Review(
             instructor_name=clas.instructor_name,
-            description=form.description.data,
+            description=description,
             review=form.rating.data,
             student_name=current_user.student.f_name+" "+current_user.student.l_name,
             class_name=clas.class_name
@@ -569,8 +617,7 @@ def view_review():
     reviews = Review.query.all()
     instructors = Instructor.query.all()
 
-    for review in reviews:
-        print(len(review.review))
+
 
 
     return render_template("admin/view_review.html", reviews=reviews,instructors=instructors, status=term_status)
@@ -645,19 +692,46 @@ def end_semester():
                 student.warnings += 1
 
             student.honors = False
+        if student.warnings > 3:
+
+            user = User.query.filter_by(id=student.user_id).first()
+            with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+                connection.starttls()
+                connection.login(user=EMAIL, password=PASSWORD)
+                connection.sendmail(
+                    from_addr=EMAIL,
+                    to_addrs=user.email,
+                    msg=f"Subject: We are sorry to say your account is terminated!\n\nYou received too many warnings.....")
+            db.session.delete(student)
+            db.session.delete(user)
+            db.session.commit()
 
     instructors = Instructor.query.all()
     for instructor in instructors:
         instructor.classes.clear()
+        if instructor.warnings > 3:
+            user = User.query.filter_by(id=instructor.user_id).first()
+            with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+                connection.starttls()
+                connection.login(user=EMAIL, password=PASSWORD)
+                connection.sendmail(
+                    from_addr=EMAIL,
+                    to_addrs=user.email,
+                    msg=f"Subject: We are sorry to say your account is terminated!\n\nYou received too many warnings.....")
+            db.session.delete(instructor)
+            db.session.delete(user)
+            db.session.commit()
     reviews = Review.query.all()
     classes = Classes.query.all()
     complains = Complain.query.all()
+
     for review in reviews:
         db.session.delete(review)
     for complain in complains:
         db.session.delete(complain)
     for clas in classes:
         db.session.delete(clas)
+
     db.session.commit()
 
 
@@ -733,20 +807,24 @@ def close_tutorial():
         db.session.commit()
         return redirect(url_for('instructor_index'))
 
-# @app.route("/cancel_class")
-# def cancel_class():
-#     classes=Classes.query.all()
-#
-#     for clas in classes:
-#         student = clas.student
-#         length = len(list(student))
-#         print(length)
-#         # if length < 2: # TODO Change the value after debug
-#         #
-#         #     print(len)
-#         #     # clas.student.clear()
-#         #     # clas.instructor.clear()
-#         #     db.session.delete(clas)
-#         #     db.session.commit()
-#
-#     return redirect(url_for('admin_home'))
+
+@app.route("/warning accept<id>/", methods=["POST", "GET"])
+def warning_accept(id):
+    complain = Complain.query.filter_by(id=id).first()
+    student = Student.query.filter_by(f_name=complain.complainTo.split(" ")[0]).first()
+    if student:
+        student.warnings += 1
+        db.session.delete(complain)
+        db.session.commit()
+    else:
+        db.session.delete(complain)
+        db.session.commit()
+    return redirect(url_for("view_complaint"))
+
+
+@app.route("/deny warning<id>", methods=["POST", "GET"])
+def deny_warning(id):
+    complain = Complain.query.filter_by(id=id).first()
+    db.session.delete(complain)
+    db.session.commit()
+    return redirect((url_for("view_complaint")))

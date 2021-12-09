@@ -72,6 +72,8 @@
 
 
 
+
+
 <!--    <tr>-->
 <!--      <th scope="row">435341</th>-->
 <!--      <td>reaz</td>-->
@@ -89,6 +91,17 @@
 <!--      <td> <a href="{{url_for('student_details')}}">details</a></td>-->
 <!--    </tr>-->
 </table>
+   <br>
+
+     <div class="edit-btn">
+    <a href="{{  url_for('complaint')}}" class="btn btn-outline-danger">
+    File Complaint
+        <i class="fas fa-pen"></i>
+      </a>
+    </div>
+
+
+  <br>
 {% if status == 'Grading' %}
   <button class="btn btn-lg btn-outline-primary" type="submit">submit</button>
 
