@@ -31,7 +31,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Admin</a>
+    <a class="navbar-brand" href="{{url_for('home')}}">CunyZero</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -42,11 +42,11 @@
         <a class="nav-link " href="{{url_for('create_class')}}">Create Class</a>
         {% endif %}
         {% if status == "End Semester" %}
-          <a class="nav-link " href="{{url_for('view_complaint')}}">Graduation</a>
+          <a class="nav-link " href="{{url_for('graduation')}}">Graduation</a>
         {% endif %}
         <a class="nav-link " href="{{url_for('view_review')}}">Reviews</a>
         <a class="nav-link " href="{{url_for('view_complaint')}}">Complain</a>
-
+        <a class="nav-link btn btn-outline-danger" href="{{url_for('logout')}}">Logout</a>
       </div>
     </div>
   </div>

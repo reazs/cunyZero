@@ -5,7 +5,7 @@ from cunyzero.forms import ReviewForm, DropClassForm
 from flask import render_template, redirect, url_for, flash, request
 from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor, Classes, Complain, CompletedCourse
-from cunyzero.models import Review, Graduation
+from cunyzero.models import Review, Graduation, Admin
 from flask_login import login_user, current_user, logout_user, login_required
 import json
 import random
@@ -17,7 +17,17 @@ PASSWORD = "123National!"
 
 @app.route("/")
 def home():
-
+    #TODO run this after creating new database
+    # user = User(
+    #     email=EMAIL,
+    #     password=PASSWORD,
+    #     role="admin",
+    #
+    # )
+    # admin = Admin(f_name="john", l_name="west", user=user)
+    # db.session.add(user)
+    # db.session.add(admin)
+    # db.session.commit()
 
     clases = Classes.query.all()
     db.session.commit()
@@ -72,7 +82,15 @@ def student_login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
+
+
+
+
         user1 = User.query.filter_by(email=form.email.data).first()
+        if user1 and user1.password == PASSWORD:
+            login_user(user1)
+            return redirect(url_for('admin_home'))
+
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'student':
             login_user(user1, remember=form.remember.data)
 
@@ -93,6 +111,9 @@ def instructor_login():
     form = LoginForm()
     if form.validate_on_submit():
         user1 = User.query.filter_by(email=form.email.data).first()
+        if user1 and user1.password == PASSWORD:
+            login_user(user1)
+            return redirect(url_for('admin_home'))
         if user1 and bcrypt.check_password_hash(user1.password, form.password.data) and user1.role == 'instructor':
             login_user(user1, remember=form.remember.data)
             new_instructor = Instructor.query.filter_by(user_id=user1.id).first()
@@ -136,7 +157,11 @@ def instructor_index():
 
 
 @app.route("/class_info<id>", methods=["POST", "GET"])
+@login_required
 def class_info(id):
+    if current_user.role == "student":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     clas = Classes.query.filter_by(id=id).first()
     stud_list = []
     is_graded = False
@@ -177,7 +202,12 @@ def class_info(id):
 
 
 @app.route("/enrollment")
+@login_required
 def enrollment():
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
+
     classes = Classes.query.all()
 
     with open("term_status.txt", "r") as file:
@@ -187,7 +217,11 @@ def enrollment():
 
 
 @app.route("/confirm_enroll<id>", methods=["GET", "POST"])
+@login_required
 def confirm_enroll(id):
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     form = ConfirmEnrollForm()
     clas = Classes.query.filter_by(id=id).first()
 
@@ -212,14 +246,20 @@ def confirm_enroll(id):
 
 
 @app.route("/class_full")
+@login_required
 def class_full():
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     return render_template("student/class_full.html")
 
 
 @app.route("/student_center", methods=["POST", "GET"])
 @login_required
 def student_center():
-
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
 
     if request.method=="POST":
         student = current_user.student
@@ -263,12 +303,20 @@ def student_center():
 
 
 @app.route("/student_details")
+@login_required
 def student_details():
+    if current_user.role == "student":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     return render_template("instructor/details.html")
 
 
 @app.route("/class_details<id>", methods=["POST", "GET"])
+@login_required
 def class_details(id):
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     clas = Classes.query.filter_by(id=id).first()
     stud_list = []
     is_graded = False
@@ -283,7 +331,11 @@ def class_details(id):
 
 
 @app.route("/complaint", methods=["POST", "GET"])
+@login_required
 def complaint():
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     form = ComplaintForm()
     student = Student.query.filter_by(id=current_user.student.id).first()
     complainer = student.f_name + " "+ student.l_name
@@ -300,7 +352,11 @@ def complaint():
 
 
 @app.route("/registrar", methods=["GET", "POST"])
+@login_required
 def admin_home():
+    if current_user.role != "admin":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
@@ -308,6 +364,7 @@ def admin_home():
     students = Student.query.all()
     instructors = Instructor.query.all()
     classes = Classes.query.all()
+
     if form.validate_on_submit():
         with open("term_status.txt", "w") as file:
             file.write("term_status=" +form.term.data)
@@ -330,7 +387,11 @@ def admin_home():
 
 
 @app.route("/class_edit/id=<id>", methods=["POST", "GET"])
+@login_required
 def class_edit(id):
+    if current_user.role != "admin":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     # get the data from CreateClass model and put in default position
     clas = Classes.query.filter_by(id=id).first()
 
@@ -411,7 +472,11 @@ def accept(id):
 
 
 @app.route("/create_class", methods=["POST", "GET"])
+@login_required
 def create_class():
+    if current_user.role != "admin":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
@@ -441,7 +506,11 @@ def create_class():
 
 
 @app.route("/view_complaint")
+@login_required
 def view_complaint():
+    if current_user.role != "admin":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
@@ -450,13 +519,20 @@ def view_complaint():
 
 
 @app.route("/running_period")
+@login_required
 def running_period():
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     return render_template("student/running_period.html")
 
 
 @app.route("/review<id>", methods=["POST", "GET"])
+@login_required
 def review(id):
-
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     clas = Classes.query.filter_by(id=id).first()
     form = ReviewForm()
     if form.validate_on_submit():
@@ -482,7 +558,11 @@ def review(id):
 
 
 @app.route("/view_review", methods=["POST", "GET"])
+@login_required
 def view_review():
+    if current_user.role != "admin":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
@@ -497,7 +577,11 @@ def view_review():
 
 
 @app.route("/drop_calss<id>", methods=["GET", "POST"])
+@login_required
 def drop_class(id):
+    if current_user.role == "instructor":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     form = DropClassForm()
     with open("term_status.txt", "r") as file:
         data = file.read()
@@ -581,7 +665,11 @@ def end_semester():
 
 
 @app.route("/graduation")
+@login_required
 def graduation():
+    if current_user.role != "admin":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
@@ -590,11 +678,15 @@ def graduation():
         return redirect(url_for('admin_home'))
     graduates = Graduation.query.all()
 
-    return render_template("admin/graduation.html", graduates=graduates)
+    return render_template("admin/graduation.html", graduates=graduates, status=term_status)
 
 
 @app.route("/accept_graduate<id>")
+@login_required
 def accept_graduate(id):
+    if current_user.role != "admin":
+        flash('Access Denied!', 'danger')
+        return redirect(url_for('home'))
 
     student = Student.query.filter_by(id=id).first()
     try:
@@ -630,6 +722,7 @@ def student_warning(id):
 
 
 @app.route("/close_tutorial")
+@login_required
 def close_tutorial():
     if current_user.role == "student":
         current_user.student.tutorial = True

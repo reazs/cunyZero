@@ -62,11 +62,11 @@
       <td> {{graduate.class_count}} </td>
       <td>
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-3">
                 <a href="{{url_for('accept_graduate', id=graduate.student_id)}}"  class="btn btn-outline-success">Accept</a>
 
           </div>
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <a href="{{url_for('student_warning', id=graduate.student_id)}}" class="btn btn-outline-danger">Deny</a>
             </div>
         </div>
