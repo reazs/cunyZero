@@ -86,6 +86,15 @@
        <h5 class="small-heading">Welcome {{current_user.student.f_name}}</h5>
        <h5 class="small-heading"><strong>Emplid:</strong> {{current_user.student.empl_id}}</h5>
        <h5 class="small-heading"><strong>GPA:</strong> {{current_user.student.c_gpa}}</h5>
+       <h5 class="small-heading"><strong>Honor:</strong> {% if current_user.student.honors == 1%}Yes {% else%} No {% endif %} </h5>
+        <h5 class="small-heading"><strong>Warning(s):</strong> {{current_user.student.warnings }}</h5>
+        <center>
+            <form action="" method="POST">
+                {% if status == "End Semester" and current_user.student.is_applied == False%}
+            <button type="submit"  style="width: 30%;"  class="btn btn-outline-success btn-lg btn-block">Apply For Graduation</button>
+                {% endif %}
+            </form>
+        </center>
        <div class="sized-box"></div>
 
        <h6 class="small-heading">Academics</h6>

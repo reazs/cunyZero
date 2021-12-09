@@ -81,12 +81,12 @@ class DropClassForm(FlaskForm):
     submit = SubmitField("Drop Class")
 
 class TermForm(FlaskForm):
-    term = SelectField("Term Status", validators=[DataRequired()], choices=["Set-Up", "Register", "Class Running", "Grading"])
+    term = SelectField("Term Status", validators=[DataRequired()], choices=["Set-Up", "Register", "Class Running", "Grading", "End Semester"])
     submit = SubmitField("Submit")
 
 
 class GradingForm(FlaskForm):
-    grade = FloatField("grade", validators=[DataRequired(), NumberRange(min=0,max=4)])
+    grade = FloatField("grade", validators=[DataRequired(), NumberRange(min=0, max=4)])
     submit = SubmitField("update")
 
 class ReviewForm(FlaskForm):

@@ -5,7 +5,7 @@ from cunyzero.forms import ReviewForm, DropClassForm
 from flask import render_template, redirect, url_for, flash, request
 from cunyzero.schedule import classes
 from cunyzero.models import User, Student, Instructor, Classes, Complain, CompletedCourse
-from cunyzero.models import enrollment as enroll_
+from cunyzero.models import Review, Graduation
 from flask_login import login_user, current_user, logout_user, login_required
 import json
 import random
@@ -204,6 +204,7 @@ def confirm_enroll(id):
             student.class_count = student.class_count + 1
             clas.students.append(student)
             clas.seat = clas.seat - 1
+            clas.student_count += 1
             db.session.commit()
             return redirect(url_for("student_center"))
 
@@ -215,10 +216,24 @@ def class_full():
     return render_template("student/class_full.html")
 
 
-@app.route("/student_center")
+@app.route("/student_center", methods=["POST", "GET"])
 @login_required
 def student_center():
 
+
+    if request.method=="POST":
+        student = current_user.student
+        name = student.f_name + " " + student.l_name
+        class_count = student.class_count
+        new_graduate = Graduation(
+            student_name=name,
+            class_count=class_count,
+            student_id=student.id
+        )
+        student.is_applied = True
+        db.session.add(new_graduate)
+        db.session.commit()
+        return redirect(url_for('student_center'))
     class_grades = CompletedCourse.query.filter_by(stud_id=current_user.student.id)
     length = len(list(class_grades))
     grade = 0
@@ -286,9 +301,6 @@ def complaint():
 
 @app.route("/registrar", methods=["GET", "POST"])
 def admin_home():
-
-
-
     with open("term_status.txt", "r") as file:
         data = file.read()
         term_status = data.split("=")[1]
@@ -300,8 +312,21 @@ def admin_home():
         with open("term_status.txt", "w") as file:
             file.write("term_status=" +form.term.data)
         TERM_STATUS = form.term.data
+        if term_status == "End Semester":
+            return redirect(url_for('end_semester'))
+        # if term_status == "Class Running":
+        #     cancel_classes = []
+        #     for clas in classes:
+        #         student = clas.student
+        #         length=len(list(student))
+        #
+        #         if length<2: # TODO change this value after debuging
+        #             cancel_classes.append(clas)
+        #
+        #             return redirect(url_for('cancel_class'))
+
         return redirect(url_for("admin_home"))
-    return render_template("admin/index.html", students=students, instructors=instructors, form=form, classes=classes)
+    return render_template("admin/index.html", students=students, instructors=instructors, form=form, classes=classes, status=term_status)
 
 
 @app.route("/class_edit/id=<id>", methods=["POST", "GET"])
@@ -387,7 +412,11 @@ def accept(id):
 
 @app.route("/create_class", methods=["POST", "GET"])
 def create_class():
-
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+    if term_status != "Set-Up":
+        return redirect(url_for("admin_home"))
     form = CreateClassForm()
     form.instructor.choices=[instructor.f_name + " " + instructor.l_name for instructor in Instructor.query.all()]
     if form.validate_on_submit():
@@ -408,13 +437,16 @@ def create_class():
         db.session.commit()
         return redirect(url_for("admin_home"))
 
-    return render_template("admin/create_class.html", form=form)
+    return render_template("admin/create_class.html", form=form, status=term_status)
 
 
 @app.route("/view_complaint")
 def view_complaint():
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
     complains = Complain.query.all()
-    return render_template("admin/complain_view.html", complains=complains)
+    return render_template("admin/complain_view.html", complains=complains, status=term_status)
 
 
 @app.route("/running_period")
@@ -422,18 +454,46 @@ def running_period():
     return render_template("student/running_period.html")
 
 
-@app.route("/review", methods=["POST", "GET"])
-def review():
+@app.route("/review<id>", methods=["POST", "GET"])
+def review(id):
+
+    clas = Classes.query.filter_by(id=id).first()
     form = ReviewForm()
+    if form.validate_on_submit():
+        new_review = Review(
+            instructor_name=clas.instructor_name,
+            description=form.description.data,
+            review=form.rating.data,
+            student_name=current_user.student.f_name+" "+current_user.student.l_name,
+            class_name=clas.class_name
+        )
+        instructor = Instructor.query.filter_by(f_name=clas.instructor_name.split(" ")[0]).first()
+        instructor.rating_count += 1
+        instructor.rating += (len(form.rating.data)-instructor.rating)/instructor.rating_count
+
+        db.session.add(new_review)
+        db.session.commit()
+        return redirect(url_for('student_center'))
     return render_template("student/review.html", form=form)
 
-# TODO create new db table for review we have to do honor roll  GRADUATION, WARNING DEMO
+# TODO we have to do honor roll  GRADUATION, WARNING DEMO
 # TODO Class CANCEL
-# TODO REVIEW CHECKING
+
+
+
 @app.route("/view_review", methods=["POST", "GET"])
 def view_review():
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+    reviews = Review.query.all()
+    instructors = Instructor.query.all()
 
-    return render_template("admin/view_review.html")
+    for review in reviews:
+        print(len(review.review))
+
+
+    return render_template("admin/view_review.html", reviews=reviews,instructors=instructors, status=term_status)
 
 
 @app.route("/drop_calss<id>", methods=["GET", "POST"])
@@ -451,18 +511,139 @@ def drop_class(id):
                                          is_graded=True,
                                          instructor_name=clas.instructor_name,
                                          student_name=current_user.student.f_name+" "+current_user.student.l_name)
+
         db.session.add(completeCourse)
         student = current_user.student
         if term_status == "Register":
             clas.seat = clas.seat + 1
+            # clas.student_count -= 1
 
         student.classes.remove(clas)
 
-        # enroll_.query.filter(enroll_.student_id == student_id, class_id=clas.id).delete()
-        # student.enrollment.remove(student_id=student_id)
         db.session.commit()
         return redirect(url_for('student_center'))
 
     return render_template("student/drop_class.html", clas=clas, status=term_status, form=form)
 
 
+@app.route("/delete_review<id>", methods=["POST", "GET"])
+def delete_review(id):
+
+    review = Review.query.filter_by(id=id).first()
+    db.session.delete(review)
+    db.session.commit()
+
+    return redirect(url_for('view_review'))
+
+
+
+@app.route("/instructor_warning<id>", methods=["POST","GET"])
+def instructor_warning(id):
+    instructor = Instructor.query.filter_by(id=id).first()
+    instructor.warnings += 1
+    db.session.commit()
+    return redirect(url_for('view_review'))
+
+
+@app.route("/end semester")
+def end_semester():
+
+
+    students = Student.query.all()
+    for student in students:
+        student.classes.clear()
+        if student.c_gpa > 3.5:
+            student.honors = True
+            if student.warnings > 0:
+                student.warnings -= 1
+        else:
+            if student.c_gpa < 2:
+                student.warnings += 1
+
+            student.honors = False
+
+    instructors = Instructor.query.all()
+    for instructor in instructors:
+        instructor.classes.clear()
+    reviews = Review.query.all()
+    classes = Classes.query.all()
+    complains = Complain.query.all()
+    for review in reviews:
+        db.session.delete(review)
+    for complain in complains:
+        db.session.delete(complain)
+    for clas in classes:
+        db.session.delete(clas)
+    db.session.commit()
+
+
+    return redirect(url_for('admin_home'))
+
+
+@app.route("/graduation")
+def graduation():
+    with open("term_status.txt", "r") as file:
+        data = file.read()
+        term_status = data.split("=")[1]
+
+    if term_status != "End Semester":
+        return redirect(url_for('admin_home'))
+    graduates = Graduation.query.all()
+
+    return render_template("admin/graduation.html", graduates=graduates)
+
+
+@app.route("/accept_graduate<id>")
+def accept_graduate(id):
+
+    student = Student.query.filter_by(id=id).first()
+    try:
+        email = User.query.filter_by(id=student.user_id).first().email
+        with smtplib.SMTP("smtp.gmail.com", 587) as connection:
+            connection.starttls()
+            connection.login(user=EMAIL, password=PASSWORD)
+            connection.sendmail(
+                from_addr=EMAIL,
+                to_addrs=email,
+                msg=f"Subject: Congrats you graduated!\n\nyay you made it awesome :).....")
+    except Exception as e:
+        print(e)
+    graduate = Graduation.query.filter_by(student_id=id).first()
+    db.session.delete(graduate)
+    db.session.delete(student)
+    db.session.commit()
+
+
+    return redirect(url_for('graduation'))
+
+
+@app.route("/student warning<id>")
+def student_warning(id):
+    student = Student.query.filter_by(id=id).first()
+    student.warnings += 1
+    student.is_applied = False
+    graduate = Graduation.query.filter_by(student_id=id).first()
+    db.session.delete(graduate)
+    db.session.commit()
+
+    return redirect('graduation')
+
+
+
+# @app.route("/cancel_class")
+# def cancel_class():
+#     classes=Classes.query.all()
+#
+#     for clas in classes:
+#         student = clas.student
+#         length = len(list(student))
+#         print(length)
+#         # if length < 2: # TODO Change the value after debug
+#         #
+#         #     print(len)
+#         #     # clas.student.clear()
+#         #     # clas.instructor.clear()
+#         #     db.session.delete(clas)
+#         #     db.session.commit()
+#
+#     return redirect(url_for('admin_home'))

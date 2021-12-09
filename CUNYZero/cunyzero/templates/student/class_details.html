@@ -57,7 +57,7 @@
   <br>
   {% if status=="Grading" %}
   <div class="edit-btn">
-    <a href="{{  url_for('review')}}" class="btn btn-outline-success">
+    <a href="{{  url_for('review', id=clas.id)}}" class="btn btn-outline-success">
     Give Review
         <i class="far fa-star"></i>
       </a>

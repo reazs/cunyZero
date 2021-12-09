@@ -1,0 +1,81 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+<link href="{{ url_for('static', filename='admin.css') }}" rel="stylesheet">
+
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto&display=swap" rel="stylesheet">
+
+<style>
+   .small-heading{
+
+         font-size: 1.4rem;
+      }
+    h6.small-heading{
+         color: grey;
+         font-weight: bold;
+         margin-bottom: 40px;
+      }
+
+     .nav-link{
+         margin-left: 20px;
+         font-size: 1.2rem;
+         font-family: 'Merriweather', serif;
+      }
+      td p{
+        margin: 0;
+      }
+</style>
+
+<body>
+    {% include "admin/header.html" %}
+    <br><br><br>
+    <div class="container">
+        <h6 class="small-heading">Graduation</h6>
+
+              <table class="table table-striped">
+
+
+
+  <thead>
+    <tr>
+      <th scope="col">Student Name</th>
+      <th scope="col">Completed Class</th>
+      <th scope="col">Approve</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+
+   {% for graduate in graduates: %}
+    <tr>
+      <td> {{graduate.student_name}} </td>
+      <td> {{graduate.class_count}} </td>
+      <td>
+        <div class="row">
+          <div class="col-sm-6">
+                <a href="{{url_for('accept_graduate', id=graduate.student_id)}}"  class="btn btn-outline-success">Accept</a>
+
+          </div>
+            <div class="col-sm-6">
+                <a href="{{url_for('student_warning', id=graduate.student_id)}}" class="btn btn-outline-danger">Deny</a>
+            </div>
+        </div>
+    </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    </div>
+
+</body>

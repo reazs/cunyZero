@@ -1,0 +1,124 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+<link href="{{ url_for('static', filename='admin.css') }}" rel="stylesheet">
+
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto&display=swap" rel="stylesheet">
+
+<style>
+   .small-heading{
+
+         font-size: 1.4rem;
+      }
+    h6.small-heading{
+         color: grey;
+         font-weight: bold;
+         margin-bottom: 40px;
+      }
+
+     .nav-link{
+         margin-left: 20px;
+         font-size: 1.2rem;
+         font-family: 'Merriweather', serif;
+      }
+      td p{
+        margin: 0;
+      }
+</style>
+
+<body>
+    {% include "admin/header.html" %}
+    <br><br><br>
+    <div class="container">
+        <h6 class="small-heading">Instructor Rating</h6>
+
+
+        <table class="table table-hover">
+
+  <thead>
+    <tr>
+      <th scope="col">Instructor Name</th>
+      <th scope="col">Average Rating</th>
+      <th scope="col">Warning</th>
+
+    </tr>
+  </thead>
+  <tbody>
+  {% for instructor in instructors %}
+   <tr>
+      <td> {{instructor.f_name+" "+instructor.l_name }} </td>
+      <td> {{instructor.rating}} </td>
+
+      <td>
+        <div class="row">
+            {% if instructor.rating <= 2 %}
+
+<!--           <div class="col-md-6"> <a  class="btn btn-outline-success"><i class="fas fa-check"></i></a></div>-->
+            <div class="col-md-6"><a href="{{url_for('instructor_warning', id=instructor.id)}}" class="btn">send warning<i class="fas fa-exclamation-circle"></i></a></div>
+            {% endif %}
+        </div>
+    </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+        <br><br>
+
+        <h6 class="small-heading">Reviews</h6>
+
+              <table class="table table-hover">
+
+
+
+  <thead>
+    <tr>
+      <th scope="col">Class Name</th>
+      <th scope="col">Instructor</th>
+      <th scope="col">Student</th>
+      <th scope="col">Review</th>
+      <th scope="col">Descriptions</th>
+      <th>Delete</th>
+<!--        <td>Approve</td>-->
+
+
+    </tr>
+  </thead>
+  <tbody>
+    {% if reviews is none : %}
+        <h6>No New Complains</h6>
+    {% else: %}
+   {% for review in reviews: %}
+    <tr>
+      <td> {{review.class_name}} </td>
+      <td> {{review.instructor_name}} </td>
+      <td>{{review.student_name}}</td>
+      <td> {{review.review}} </td>
+      <td>{{review.description|safe}}</td>
+      <td>
+        <div class="row">
+<!--           <div class="col-md-6"> <a  class="btn btn-outline-success"><i class="fas fa-check"></i></a></div>-->
+            <div class="col-md-6"><a href="{{url_for('delete_review', id=review.id)}}" class="btn"><i class="fas fa-trash-alt"></i></a></div>
+        </div>
+    </td>
+    </tr>
+    {% endfor %}
+  {% endif %}
+  </tbody>
+</table>
+
+    </div>
+
+</body>

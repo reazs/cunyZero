@@ -44,6 +44,7 @@ class Student(db.Model):
     gpa = db.Column(db.Float, nullable=False)
     c_gpa = db.Column(db.Float, default=4)
     honors = db.Column(db.Boolean)
+    is_applied=db.Column(db.Boolean, default=False)
     class_count = db.Column(db.Integer, default=0)
     empl_id = db.Column(db.String(9), unique=True) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -61,6 +62,8 @@ class Instructor(db.Model):
     warnings = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     classes = db.relationship("Classes", secondary=assign_class, backref=db.backref('instructors', lazy='dynamic'))
+    rating = db.Column(db.Float, default=5)
+    rating_count = db.Column(db.Integer, default=0)
 
 class Admin(db.Model):
     __tablename__ = 'admin'
@@ -79,6 +82,7 @@ class Classes(db.Model):
     seat = db.Column(db.Integer, nullable=False)
     student = db.relationship("Student", secondary=enrollment)
     instructor = db.relationship("Instructor", secondary=assign_class)
+    # student_count = db.Column(db.Integer, default=0)
     time = db.Column(db.String, nullable=False)
 
 
@@ -87,6 +91,15 @@ class Complain(db.Model):
     complainer = db.Column(db.String, nullable=False)
     complainTo = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
+
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    instructor_name = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    review = db.Column(db.String, nullable=False)
+    student_name = db.Column(db.String, nullable=False)
+    class_name = db.Column(db.String, nullable=False)
 
 
 class CompletedCourse(db.Model):
@@ -99,5 +112,11 @@ class CompletedCourse(db.Model):
     stud_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
     is_graded = db.Column(db.Boolean, default=False)
 
+class Graduation(db.Model):
+    __tablename__="graduation"
+    id = db.Column(db.Integer, primary_key=True)
+    student_name=db.Column(db.String, nullable=False)
+    class_count=db.Column(db.Integer, nullable=False)
+    student_id=db.Column(db.Integer, nullable=False)
 
 db.create_all()

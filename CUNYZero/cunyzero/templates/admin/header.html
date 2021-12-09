@@ -38,9 +38,15 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav  ml-auto">
         <a class="nav-link " href="{{url_for('admin_home')}}">Home</a>
+        {% if status == "Set-Up" %}
         <a class="nav-link " href="{{url_for('create_class')}}">Create Class</a>
-        <a class="nav-link " href="#">Reviews</a>
+        {% endif %}
+        {% if status == "End Semester" %}
+          <a class="nav-link " href="{{url_for('view_complaint')}}">Graduation</a>
+        {% endif %}
+        <a class="nav-link " href="{{url_for('view_review')}}">Reviews</a>
         <a class="nav-link " href="{{url_for('view_complaint')}}">Complain</a>
+
       </div>
     </div>
   </div>
