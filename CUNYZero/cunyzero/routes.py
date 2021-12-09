@@ -204,7 +204,7 @@ def confirm_enroll(id):
             student.class_count = student.class_count + 1
             clas.students.append(student)
             clas.seat = clas.seat - 1
-            clas.student_count += 1
+
             db.session.commit()
             return redirect(url_for("student_center"))
 
@@ -629,6 +629,16 @@ def student_warning(id):
     return redirect('graduation')
 
 
+@app.route("/close_tutorial")
+def close_tutorial():
+    if current_user.role == "student":
+        current_user.student.tutorial = True
+        db.session.commit()
+        return redirect(url_for('student_center'))
+    else:
+        current_user.instructor.tutorial = True
+        db.session.commit()
+        return redirect(url_for('instructor_index'))
 
 # @app.route("/cancel_class")
 # def cancel_class():

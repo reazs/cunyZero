@@ -1,6 +1,8 @@
 
 {% include "login_signup/header.html" %}
-<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"
+      xmlns="http://www.w3.org/1999/html"/>
 
 <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
@@ -88,6 +90,9 @@
        <h5 class="small-heading"><strong>GPA:</strong> {{current_user.student.c_gpa}}</h5>
        <h5 class="small-heading"><strong>Honor:</strong> {% if current_user.student.honors == 1%}Yes {% else%} No {% endif %} </h5>
         <h5 class="small-heading"><strong>Warning(s):</strong> {{current_user.student.warnings }}</h5>
+
+
+
         <center>
             <form action="" method="POST">
                 {% if status == "End Semester" and current_user.student.is_applied == False%}
@@ -130,7 +135,14 @@
         <div class="sized-box"></div>
 
         <h6 class="grey-title">
-           You do not have any recent notification
+           {% if current_user.student.tutorial == 0 %}
+       <center>
+        <div class="container">
+            <img width="70%"  src="static/images/student_demo.gif">
+        </div>
+           <a href="{{url_for('close_tutorial')}}" class="btn btn-outline-danger">close tutorial</a>
+       </center>
+       {% endif %}
         </h6>
         <div class="sized-box"></div>
         <div class="sized-box"></div>

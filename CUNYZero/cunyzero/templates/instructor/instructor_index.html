@@ -87,6 +87,8 @@
         <h5 class="small-heading">Warning(s): {{current_user.instructor.warnings}}</h5>
        <div class="sized-box"></div>
 
+
+
        <h6 class="small-heading">Class</h6>
 
       <center>
@@ -121,7 +123,14 @@
         <div class="sized-box"></div>
 
         <h6 class="grey-title">
-           You do not have any recent notification
+                  {% if current_user.instructor.tutorial == 0 %}
+       <center>
+        <div class="container">
+            <img width="70%"  src="static/images/instructor_demo.gif">
+        </div>
+           <a href="{{url_for('close_tutorial')}}" class="btn btn-outline-danger">close tutorial</a>
+       </center>
+       {% endif %}
         </h6>
         <div class="sized-box"></div>
         <div class="sized-box"></div>
