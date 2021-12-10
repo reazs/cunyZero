@@ -24,7 +24,7 @@
     
     ```bash
     
-    # in terminal run
+    # make sure you're in the same directory as main.py and in terminal run
     python main.py
     
     # or if you're running from an IDE run main.py
@@ -33,6 +33,6 @@
 
 1. Check website
    ```bash
-    # go to local on your browser
+    # go to localhost on your browser
     http://127.0.0.1:5000/
    ```
