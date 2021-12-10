@@ -32,7 +32,7 @@
     ```
 
 1. Check website
-2.
+
    ```bash
     # go to localhost on your browser
     http://127.0.0.1:5000/
