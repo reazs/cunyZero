@@ -30,4 +30,8 @@
     # or if you're running from an IDE run main.py
    
     ```
+
+1. Check website
+   ```bash
     
+   ```
