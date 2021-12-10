@@ -17,7 +17,7 @@
     pip install flask_bootstrap
     pip install flask_wtf
     pip install email_validator
-   
+   ```
  
     
 1. Run
