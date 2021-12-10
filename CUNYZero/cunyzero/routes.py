@@ -12,8 +12,7 @@ import json
 import random
 import smtplib
 
-
-
+# TODO This is the email and password for admin
 
 EMAIL = "johnweweno@gmail.com"
 PASSWORD = "123National!"
@@ -21,17 +20,20 @@ PASSWORD = "123National!"
 
 @app.route("/")
 def home():
-    #TODO run this after creating new database
-    # user = User(
-    #     email=EMAIL,
-    #     password=PASSWORD,
-    #     role="admin",
-    #
-    # )
-    # admin = Admin(f_name="john", l_name="west", user=user)
-    # db.session.add(user)
-    # db.session.add(admin)
-    # db.session.commit()
+    user1 = User.query.filter_by(email=EMAIL).first()
+
+    if user1:
+        pass
+    else:
+        user = User(
+            email=EMAIL,
+            password=PASSWORD,
+            role="admin",
+        )
+        admin = Admin(f_name="john", l_name="west", user=user)
+        db.session.add(user)
+        db.session.add(admin)
+        db.session.commit()
 
     clases = Classes.query.all()
     db.session.commit()
