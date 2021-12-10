@@ -40,6 +40,7 @@
    
 1. Admin Authorization
  
- ```bash
- Admin Email = johnweweno@gmail.com
- Admin Password = 123National!
+    ```bash
+        Admin Email = johnweweno@gmail.com
+        Admin Password = 123National!
+    ```
